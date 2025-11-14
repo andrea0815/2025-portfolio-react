@@ -1,0 +1,41 @@
+@import url("https://use.typekit.net/xrh3pym.css");
+
+
+@import "tailwindcss";
+
+@theme {
+  --color-*: initial;
+  --color-yellow: #FFFA69;
+  --color-khaki: #665C11;
+  --color-white: #FFFFFF;
+  --color-white: #FFFFFF;
+  --color-black: #111111;
+  --color-gray-100: #898989;
+  --color-gray-200: #4E4E4E;
+
+  --spacing-*: initial;
+  --spacing: 0.25rem;       /* define base */
+  --spacing-1: 2px;        /* a custom named step */
+  --spacing-2: 5px;   
+  --spacing-3: 10px;   
+  --spacing-4: 15px;   
+  --spacing-5: 20px;   
+  --spacing-6: 30px;   
+  --spacing-7: 60px;   
+  --spacing-8: 100px;   
+
+  --spacing-*: initial;
+  --spacing: 0.25rem;       /* define base */
+  --spacing-1: 2px;        /* a custom named step */
+  --spacing-2: 5px;   
+  --spacing-3: 10px;   
+  --spacing-4: 15px;   
+  --spacing-5: 20px;   
+  --spacing-6: 30px;   
+  --spacing-7: 60px;   
+  --spacing-8: 100px;  
+
+  --font-mono: "bakemono-variable", sans-serif;
+  --font-serif: "sway-variable", serif;
+  
+}
