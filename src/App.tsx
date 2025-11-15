@@ -1,9 +1,14 @@
+import gsap from 'gsap';
+
+import { ScrambleTextPlugin } from "gsap/all";
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider
 } from "react-router-dom";
+
+gsap.registerPlugin(ScrambleTextPlugin);
 
 // Page imports
 import MainLayout from "./layouts/MainLayout";
@@ -17,9 +22,9 @@ function App() {
     createRoutesFromElements(
       <Route path="/" element={<MainLayout />}>
         <Route index element={<LandingPage />} />
-        <Route path="/projects" element={<ProjectsPage/>} />
-        <Route path="/about" element={<AboutPage/>} />
-        <Route path="*" element={<PageNotFound/>} />
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="*" element={<PageNotFound />} />
       </Route>
     )
   )

@@ -1,103 +1,100 @@
-import { useRef, useEffect, useState } from 'react';
-import terminalData from '../terminal.json';
+import { useEffect, useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
+import terminalData from "../terminal.json";
+
+type Line = {
+  id: number;
+  text: string;
+  input?: string | null;
+};
 
 function Terminal() {
+  const terminalRef = useRef<HTMLParagraphElement | null>(null);
 
-    const terminal = useRef<HTMLParagraphElement | null>(null);
-    const greetingText: string = terminalData.greeting[0];
-    const workExperienceLines: string[] = terminalData.workExperience;
+  const [staticText, setStaticText] = useState<string>(terminalData.static[0]);
+  const [lines, setLines] = useState<Line[]>([]);
 
-    const [staticText, setStaticText] = useState<string>(terminalData.static[0]);
+  // Add a line to state instead of creating DOM manually
+  function addLine(text: string, input: string | null = null) {
+    setLines((prev) => [
+      ...prev,
+      { id: Date.now() + Math.random(), text, input },
+    ]);
+  }
 
-
-    const activeElements: HTMLSpanElement[] = [];
-
-    function setLine(lineText: string, input: string | null = null): void {
-        let newText: string = lineText;
-
-        const lineEl: HTMLSpanElement = document.createElement('span');
-        lineEl.classList.add("line");
-
-        const staticEl: HTMLSpanElement = document.createElement('span');
-        staticEl.classList.add('static');
-        staticEl.innerText = staticText;
-
-        const outputEl: HTMLSpanElement = document.createElement('span');
-        outputEl.classList.add('output');
-        outputEl.classList.add('active');
-        if (input && newText.includes("BLANK")) {
-            newText = newText.replace("BLANK", input);
-        } else if (newText.includes("BLANK") && !input) {
-            console.error("BLANK found but no input provided");
-        } else if (!newText.includes("BLANK") && input) {
-            console.warn("Input provided but no BLANK found");
-        }
-
-        outputEl.innerText = newText;
-
-
-        lineEl.appendChild(staticEl)
-        lineEl.appendChild(outputEl)
-
-        terminal.current?.appendChild(lineEl);
+  function addMultipleLines(
+    lines: string[] | string,
+    inputs?: string[] | string | null
+  ) {
+    if (typeof lines === "string" && Array.isArray(inputs)) {
+      inputs.forEach((inp) => addLine(lines, inp));
+    } else if (Array.isArray(lines) && typeof inputs === "string") {
+      lines.forEach((line) => addLine(line, inputs));
+    } else if (Array.isArray(lines) && Array.isArray(inputs)) {
+      lines.forEach((line, i) => addLine(line, inputs[i]));
+    } else if (Array.isArray(lines) && inputs === null) {
+      lines.forEach((line) => addLine(line, null));
     }
+  }
 
-    function setLines(lines: string[] | string, input: string[] | string | null = null): void {
-        if (typeof lines === "string" && Array.isArray(input)) {
-            input.forEach((input) => {
-                setLine(lines, input);
-            })
-        } else if (Array.isArray(lines) && (typeof input === "string" || input === null)) {
-            lines.forEach((line) => {
-                setLine(line, input);
-            })
-        } else if (Array.isArray(lines) && Array.isArray(input)) {
-            lines.forEach((line, index) => {
-                setLine(line, input[index]);
-            })
-        }
-    }
+  // Initial load
+  useEffect(() => {
+    addLine(terminalData.greeting[0], "illustrator");
+    addLine(terminalData.greeting[0], "creative developer");
+    addMultipleLines(terminalData.workExperience);
 
-    useEffect(() => {
+    // Handle static text switching
+    const updateStatic = () => {
+      if (window.innerWidth < 640) {
+        setStaticText(terminalData.static[1]);
+      } else {
+        setStaticText(terminalData.static[0]);
+      }
+    };
 
-        setLine(greetingText, 'illustrator');
-        setLine(greetingText, 'creative developer');
-        setLines(workExperienceLines);
+    updateStatic();
+    window.addEventListener("resize", updateStatic);
 
-        const updateStaticText = () => {
-            if (window.innerWidth < 640) {
-                setStaticText(terminalData.static[1]);
-            } else {
-                setStaticText(terminalData.static[0]);
-            }
-        };
+    return () => window.removeEventListener("resize", updateStatic);
+  }, []);
 
-        updateStaticText();
-        window.addEventListener("resize", updateStaticText);
+  // Animate every time lines change
+  useGSAP(
+    () => {
+      const elements = terminalRef.current?.querySelectorAll(".output") ?? [];
 
-        return () => window.removeEventListener("resize", updateStaticText);
+      elements.forEach((el) => {
+        const text = el.getAttribute("data-final-text") ?? "";
 
-
-
-
-    }, [])
-
-    useEffect(() => {
-        const staticElements = terminal.current?.querySelectorAll<HTMLSpanElement>(".static");
-        staticElements?.forEach(el => {
-            el.innerText = staticText;
+        gsap.to(el, {
+          duration: 2,
+          scrambleText: { text, chars: "!?%$_:[]{}/#*" },
         });
-    }, [staticText]);
+      });
+    },
+    { dependencies: [lines] }
+  );
 
+  return (
+    <div className="[grid-area:main] self-end mix-blend-difference">
+      <p ref={terminalRef} className="terminal w-fit flex flex-col leading-[1.2em]">
+        {lines.map((line) => {
+          const resolved = line.text.includes("BLANK") && line.input
+            ? line.text.replace("BLANK", line.input)
+            : line.text;
 
-    return (
-        <div className='[grid-area:main] self-end mix-blend-difference'>
-            <p ref={terminal} className="terminal w-fit flex flex-col leading-[1.2em]"></p>
-        </div >
-    );
+          return (
+            <span key={line.id} className="line">
+              <span className="static">{staticText}</span>
+              <span className="output" data-final-text={resolved}></span>
+            </span>
+          );
+        })}
+      </p>
+    </div>
+  );
 }
 
-
-
-export { Terminal as default };
+export default Terminal;
