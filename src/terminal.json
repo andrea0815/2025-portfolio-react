@@ -1,0 +1,86 @@
+{
+    "static": [
+        "andrea_windisch ~ % ",
+        "andrea_w ~ % "
+    ],
+    "greeting": [
+        "hey, i am a BLANK"
+    ],
+    "loaded": [
+        ">> BLANK loaded"
+    ],
+    "exit": [
+        ">> exit BLANK"
+    ],
+    "workExperience": [
+        "01-2019",
+        "one-month internship at Vice Virtue",
+        "as graphic designer",
+        "",
+        "2016-2021",
+        "Graphic and Communication Design education at the",
+        "Higher Federal Institution for Graphic Education and Research",
+        "",
+        "2021-2025",
+        "Bachelor degree “Creative Computing”",
+        "at University of Applied Sciences St. Pölten"
+    ],
+    "tools": [
+        "unity",
+        "blender",
+        "cinema4D",
+        "",
+        "craft-cms",
+        "tailwind.js",
+        "vue.js",
+        "three.js",
+        "node.js",
+        "",
+        "photoshop",
+        "indesign",
+        "illustrator",
+        "after effects",
+        "figma",
+        "unity",
+        "blender",
+        "cinema4D"
+    ],
+    "projects": [
+        {
+            "title": "Dreamary"
+        },
+        {
+            "title": "Isle in the Clouds"
+        },
+        {
+            "title": "Playing Cards"
+        },
+        {
+            "title": "3D room"
+        },
+        {
+            "title": "nosic nasal spray"
+        },
+        {
+            "title": "Gloomrun"
+        },
+        {
+            "title": "3D room"
+        },
+        {
+            "title": "nosic nasal spray"
+        },
+        {
+            "title": "Isle in the Clouds"
+        },
+        {
+            "title": "Playing Cards"
+        },
+        {
+            "title": "3D room"
+        },
+        {
+            "title": "nosic nasal spray"
+        }
+    ]
+}

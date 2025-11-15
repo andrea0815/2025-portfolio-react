@@ -1,41 +1,132 @@
 @import url("https://use.typekit.net/xrh3pym.css");
 
-
 @import "tailwindcss";
 
 @theme {
   --color-*: initial;
-  --color-yellow: #FFFA69;
-  --color-khaki: #665C11;
+  --color-yellow: #DAD53C;
+  --color-khaki: #AEA038;
   --color-white: #FFFFFF;
   --color-white: #FFFFFF;
   --color-black: #111111;
   --color-gray-100: #898989;
+  --color-gray-100-10: rgba(137, 137, 137, 0.1);
   --color-gray-200: #4E4E4E;
+  --color-gray-200-20: rgba(78, 78, 78, 0.2);
+
+  --color-text: var(--color-gray-100);
+  --color-text-highlight: var(--color-black);
+  --color-background: var(--color-white);
+  --color-primary: var(--color-khaki);
+  --color-secondary: var(--color-yellow);
+  --color-grayish: var(--color-gray-100-10);
+  --color-highlight: var(--color-yellow);
+
+  --text-base: 14px;
 
   --spacing-*: initial;
-  --spacing: 0.25rem;       /* define base */
-  --spacing-1: 2px;        /* a custom named step */
-  --spacing-2: 5px;   
-  --spacing-3: 10px;   
-  --spacing-4: 15px;   
-  --spacing-5: 20px;   
-  --spacing-6: 30px;   
-  --spacing-7: 60px;   
-  --spacing-8: 100px;   
+  --spacing-1: 2px;
+  --spacing-2: 5px;
+  --spacing-3: 10px;
+  --spacing-4: 15px;
+  --spacing-5: 20px;
+  --spacing-6: 30px;
+  --spacing-7: 60px;
+  --spacing-8: 100px;
 
-  --spacing-*: initial;
-  --spacing: 0.25rem;       /* define base */
-  --spacing-1: 2px;        /* a custom named step */
-  --spacing-2: 5px;   
-  --spacing-3: 10px;   
-  --spacing-4: 15px;   
-  --spacing-5: 20px;   
-  --spacing-6: 30px;   
-  --spacing-7: 60px;   
-  --spacing-8: 100px;  
+  --animate-blink: blink 1s infinite steps(1);
 
   --font-mono: "bakemono-variable", sans-serif;
   --font-serif: "sway-variable", serif;
+
+  --layout-side: var(--spacing-8);
+
+}
+
+@layer base {
+  * {
+    font-size: var(--text-base);
+    font-family: var(--font-mono);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    color: var(--color-text);
+    font-weight: 400;
+
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease,
+      fill 0.3s ease,
+      stroke 0.3s ease;
+  }
+
+  body {
+    @apply bg-background;
+  }
+
+  ::selection {
+    background-color: var(--color-highlight);
+    color: var(--color-black);
+  }
+
+  .dark {
+    --color-yellow: #FFEE71;
+    --color-khaki: #665C11;
+    --color-text: var(--color-gray-100);
+    --color-text-highlight: var(--color-white);
+    --color-background: var(--color-black);
+    --color-primary: var(--color-yellow);
+    --color-secondary: var(--color-khaki);
+    --color-grayish: var(--color-gray-200-20);
+    --color-highlight: var(--color-white);
+
+  }
+
+
+
+}
+
+@layer components {
+
+
+  @keyframes blink {
+
+    0%,
+    50% {
+      opacity: 1;
+    }
+
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* For blinking cursor in terminal */
+  .terminal .line:last-of-type .output::after {
+    content: "";
+    @apply inline-block bg-primary ml-[0.2em] animate-blink translate-y-1;
+    width: 0.5em;
+    height: 0.8em;
+  }
+
+  .terminal .line{
+    @apply grid grid-cols-[auto_1fr] gap-x-2 w-full;
+  }
   
+
+  .terminal .static,
+  .terminal .output {
+    @apply text-secondary;
+  }
+
+  .terminal .output.active {
+    @apply text-primary;
+  }
+
+  .terminal .line:last-of-type .static,
+  .terminal .line:last-of-type .output {
+    @apply text-primary;
+  }
+
 }
