@@ -7,9 +7,11 @@ function Nav() {
         : "text-text  px-4 pt-2 pb-2 border-1 rounded-4xl border-transparent";
 
     return (
-        <div className='[grid-area:main] self-start flex flex-row px-2 py-2 bg-grayish gap-2 w-fit rounded-4xl'>
-            <NavLink to="/projects" className={linkClass}>&lt;projects&gt;</NavLink>
-            <NavLink to="/about" className={linkClass}>&lt;about&gt;</NavLink>
+        <div className="lg:pt-6 pt-4 [grid-area:main] self-start z-10">
+            <div className=' flex flex-row px-2 py-2 bg-grayish gap-2 w-fit rounded-4xl'>
+                <NavLink to="/projects" className={linkClass}>&lt;projects&gt;</NavLink>
+                <NavLink to="/about" className={linkClass}>&lt;about&gt;</NavLink>
+            </div>
         </div>
     );
 }

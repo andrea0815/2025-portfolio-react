@@ -5,7 +5,7 @@
 @theme {
   --color-*: initial;
   --color-yellow: #DAD53C;
-  --color-khaki: #AEA038;
+  --color-khaki: #A79513;
   --color-white: #FFFFFF;
   --color-white: #FFFFFF;
   --color-black: #111111;
@@ -20,7 +20,7 @@
   --color-primary: var(--color-khaki);
   --color-secondary: var(--color-yellow);
   --color-grayish: var(--color-gray-100-10);
-  --color-highlight: var(--color-yellow);
+  --color-highlight: var(--color-black);
 
   --text-base: 14px;
 
@@ -66,7 +66,7 @@
 
   ::selection {
     background-color: var(--color-highlight);
-    color: var(--color-black);
+    color: var(--color-gray-100);
   }
 
   .dark {

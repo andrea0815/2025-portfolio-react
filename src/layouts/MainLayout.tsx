@@ -14,25 +14,40 @@ function MainLayout() {
 
     return (
         <>
-            <div className="h-full w-full fixed py-6 
-            grid 
-            grid-cols-[var(--spacing-7)_1fr_var(--spacing-7)] 
-            lg:grid-cols-[var(--spacing-8)_1fr_var(--spacing-8)] 
-            [grid-template-areas:'sidebar_main_social']
-            ">
-                <div className="[grid-area:sidebar] flex flex-col justify-between items-center">
+            <div
+                className="
+    fixed h-full w-full 
+    grid 
+    grid-cols-[var(--spacing-7)_1fr_var(--spacing-7)]
+    lg:grid-cols-[var(--spacing-8)_1fr_var(--spacing-8)]
+    grid-rows-[100dvh]            
+    [grid-template-areas:'sidebar_main_social']
+  "
+            >
+                <div className="[grid-area:sidebar] flex flex-col justify-between items-center lg:py-6 py-4">
                     <LogoBtn />
                     <ThemeBtn />
                 </div>
-                <div className="[grid-area:main] flex justify-end items-end">
-                    <Outlet />
+
+                <div className="[grid-area:main] flex flex-col md:flex-row gap-6 md:items-stretch lg:pb-6 pb-4 min-h-0 h-full">
+                    <div className="flex-1 flex items-end min-h-0 overflow-hidden">
+                        <div className="w-full h-full overflow-hidden flex items-end">
+                            <Terminal />
+                        </div>
+                    </div>
+
+                    <div className="flex-1 flex items-end md:justify-end min-h-0 overflow-hidden">
+                        <Outlet />
+                    </div>
                 </div>
-                <Terminal />
+
                 {!isHome && <Nav />}
-                <div className="[grid-area:social] flex flex-col items-center">
+
+                <div className="[grid-area:social] flex flex-col items-center lg:py-6 py-4">
                     <SocialList />
                 </div>
             </div>
+
         </>
 
     );

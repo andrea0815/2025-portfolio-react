@@ -1,101 +1,101 @@
-import { useEffect, useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
-
+import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
-
 import terminalData from "../terminal.json";
+import { useTerminalQueue } from "../stores/useTerminalQueue";
 
-type Line = {
-  id: number;
-  text: string;
-  input?: string | null;
-};
+export default function Terminal() {
+    const terminalRef = useRef<HTMLParagraphElement | null>(null);
 
-function Terminal() {
-  const terminalRef = useRef<HTMLParagraphElement | null>(null);
+    // visible lines in the terminal
+    const lines = useTerminalQueue((s) => s.lines);
+    const addVisible = useTerminalQueue((s) => s.addVisible);
 
-  const [staticText, setStaticText] = useState<string>(terminalData.static[0]);
-  const [lines, setLines] = useState<Line[]>([]);
+    // queue from zustand
+    const queue = useTerminalQueue((s) => s.queue);
+    const dequeue = useTerminalQueue((s) => s.dequeue);
 
-  // Add a line to state instead of creating DOM manually
-  function addLine(text: string, input: string | null = null) {
-    setLines((prev) => [
-      ...prev,
-      { id: Date.now() + Math.random(), text, input },
-    ]);
-  }
+    // static prefix
+    const [staticText, setStaticText] = useState<string>(terminalData.static[0]);
 
-  function addMultipleLines(
-    lines: string[] | string,
-    inputs?: string[] | string | null
-  ) {
-    if (typeof lines === "string" && Array.isArray(inputs)) {
-      inputs.forEach((inp) => addLine(lines, inp));
-    } else if (Array.isArray(lines) && typeof inputs === "string") {
-      lines.forEach((line) => addLine(line, inputs));
-    } else if (Array.isArray(lines) && Array.isArray(inputs)) {
-      lines.forEach((line, i) => addLine(line, inputs[i]));
-    } else if (Array.isArray(lines) && inputs === null) {
-      lines.forEach((line) => addLine(line, null));
-    }
-  }
+    function animateLastLine(tl: gsap.core.Timeline) {
+        const lineEls = terminalRef.current?.querySelectorAll(".line");
+        if (!lineEls || lineEls.length === 0) return;
 
-  // Initial load
-  useEffect(() => {
-    addLine(terminalData.greeting[0], "illustrator");
-    addLine(terminalData.greeting[0], "creative developer");
-    addMultipleLines(terminalData.workExperience);
+        const last = lineEls[lineEls.length - 1];
+        const staticEl = last.querySelector(".static") as HTMLElement | null;
+        const outputEl = last.querySelector(".output") as HTMLElement | null;
 
-    // Handle static text switching
-    const updateStatic = () => {
-      if (window.innerWidth < 640) {
-        setStaticText(terminalData.static[1]);
-      } else {
-        setStaticText(terminalData.static[0]);
-      }
-    };
+        if (!staticEl || !outputEl) return;
 
-    updateStatic();
-    window.addEventListener("resize", updateStatic);
+        const finalText = outputEl.getAttribute("data-final-text") ?? "";
 
-    return () => window.removeEventListener("resize", updateStatic);
-  }, []);
-
-  // Animate every time lines change
-  useGSAP(
-    () => {
-      const elements = terminalRef.current?.querySelectorAll(".output") ?? [];
-
-      elements.forEach((el) => {
-        const text = el.getAttribute("data-final-text") ?? "";
-
-        gsap.to(el, {
-          duration: 2,
-          scrambleText: { text, chars: "!?%$_:[]{}/#*" },
+        tl.to(staticEl, { opacity: 1, duration: 0 });
+        
+        tl.to(outputEl, {
+            duration: 0.3,
+            ease: "linear",
+            scrambleText: {
+                text: finalText,
+                chars: "!+?%[$_:]#-{/*}",
+            },
         });
-      });
-    },
-    { dependencies: [lines] }
-  );
+    }
 
-  return (
-    <div className="[grid-area:main] self-end mix-blend-difference">
-      <p ref={terminalRef} className="terminal w-fit flex flex-col leading-[1.2em]">
-        {lines.map((line) => {
-          const resolved = line.text.includes("BLANK") && line.input
-            ? line.text.replace("BLANK", line.input)
-            : line.text;
+    // 👉 SEQUENCING: Process the queue one-by-one
+    useEffect(() => {
+        if (queue.length === 0) return;
 
-          return (
-            <span key={line.id} className="line">
-              <span className="static">{staticText}</span>
-              <span className="output" data-final-text={resolved}></span>
-            </span>
-          );
-        })}
-      </p>
-    </div>
-  );
+        const nextLine = queue[0];
+        addVisible(nextLine);
+
+        requestAnimationFrame(() => {
+            const tl = gsap.timeline({
+                onComplete() {
+                    dequeue();
+                },
+            });
+
+            animateLastLine(tl);
+        });
+    }, [queue, dequeue]);
+
+    useEffect(() => {
+        function updateStaticText() {
+            if (window.innerWidth < 640) {
+                setStaticText(terminalData.static[1]);
+            } else {
+                setStaticText(terminalData.static[0]);
+            }
+        }
+
+        updateStaticText();
+        window.addEventListener("resize", updateStaticText);
+        return () => window.removeEventListener("resize", updateStaticText);
+    }, []);
+
+    return (
+        <div className="flex flex-1 items-end self-end mix-blend-difference">
+            <p
+                ref={terminalRef}
+                className="terminal w-fit flex flex-col leading-[1.2em]"
+            >
+                {lines.map((line) => {
+                    const resolved =
+                        line.text.includes("BLANK") && line.input
+                            ? line.text.replace("BLANK", line.input)
+                            : line.text;
+
+                    return (
+                        <span key={line.id} className="line flex gap-2">
+                            <span className="static opacity-0">{staticText}</span>
+                            <span
+                                className="output opacity-100"
+                                data-final-text={resolved}
+                            ></span>
+                        </span>
+                    );
+                })}
+            </p>
+        </div>
+    );
 }
-
-export default Terminal;
