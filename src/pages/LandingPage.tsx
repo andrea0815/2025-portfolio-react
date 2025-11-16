@@ -7,13 +7,23 @@ import { NavLink } from "react-router-dom";
 function LandingPage() {
 
   const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
+  const enqueueMultiple = useTerminalQueue((s) => s.enqueueMultiple);
+  const clearTerminalActives = useTerminalQueue((s) => s.clearActives);
+  const landingText: string[] = terminalData.landing;
+
 
   useEffect(() => {
-    for (let index = 0; index < 20; index++) {
-      enqueueLine("");
-    }
-    enqueueLine(terminalData.greeting[0], "creative developer");
+    enqueueMultiple(landingText);
+    setTimeout(() => {
+      enqueueLine(terminalData.greeting[0], "creative developer");
+    }, 2000)
+
+    return () => {
+      clearTerminalActives();
+    };
   }, [])
+
+
 
   return (
     <div>

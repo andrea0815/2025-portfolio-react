@@ -12,6 +12,15 @@
     "exit": [
         ">> exit BLANK"
     ],
+    "landing": [
+        "",
+        ">> initialize project",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ],
     "workExperience": [
         "01-2019",
         "one-month internship at Vice Virtue",

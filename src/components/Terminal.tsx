@@ -14,6 +14,10 @@ export default function Terminal() {
     const queue = useTerminalQueue((s) => s.queue);
     const dequeue = useTerminalQueue((s) => s.dequeue);
 
+    // actives from zustand
+    const actives = useTerminalQueue((s) => s.actives);
+
+
     // static prefix
     const [staticText, setStaticText] = useState<string>(terminalData.static[0]);
 
@@ -30,7 +34,7 @@ export default function Terminal() {
         const finalText = outputEl.getAttribute("data-final-text") ?? "";
 
         tl.to(staticEl, { opacity: 1, duration: 0 });
-        
+
         tl.to(outputEl, {
             duration: 0.3,
             ease: "linear",
@@ -85,11 +89,14 @@ export default function Terminal() {
                             ? line.text.replace("BLANK", line.input)
                             : line.text;
 
+                    const isActive = actives.some((a) => a.id === line.id);
+
+
                     return (
                         <span key={line.id} className="line flex gap-2">
                             <span className="static opacity-0">{staticText}</span>
                             <span
-                                className="output opacity-100"
+                                className={`output opacity-100 ${isActive ? "active" : ""}`}
                                 data-final-text={resolved}
                             ></span>
                         </span>

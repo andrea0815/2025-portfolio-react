@@ -9,6 +9,7 @@ export type Line = {
 type TerminalQueueStore = {
   queue: Line[];
   lines: Line[];
+  actives: Line[];
   enqueueLine: (text: string, input?: string | null) => void;
   enqueueMultiple: (
     lines: string[] | string,
@@ -16,14 +17,21 @@ type TerminalQueueStore = {
   ) => void;
   dequeue: () => void;
   addVisible: (line: Line) => void;
+  clearActives: () => void;
 };
 
 export const useTerminalQueue = create<TerminalQueueStore>((set) => ({
   queue: [],
   lines: [],
+  actives: [],
 
   addVisible: (line) =>
-  set((state) => ({ lines: [...state.lines, line] })),
+    set((state) => ({ lines: [...state.lines, line] })),
+
+  clearActives: () =>
+    set(() => ({
+      actives: [],
+    })),
 
   enqueueLine: (text, input = null) => {
     const line: Line = {
@@ -31,7 +39,10 @@ export const useTerminalQueue = create<TerminalQueueStore>((set) => ({
       text,
       input,
     };
-    set((state) => ({ queue: [...state.queue, line] }));
+    set((state) => ({
+      queue: [...state.queue, line],
+      actives: [...state.actives, line],
+    }));
   },
 
   enqueueMultiple: (lines, input = null) =>
@@ -56,7 +67,11 @@ export const useTerminalQueue = create<TerminalQueueStore>((set) => ({
         );
       }
 
-      return { queue: [...state.queue, ...newLines] };
+      return {
+        queue: [...state.queue, ...newLines],
+        actives: [...state.actives, ...newLines], // 👈 add all to active
+      };
+
     }),
 
   dequeue: () =>
