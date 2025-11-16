@@ -9,7 +9,7 @@ export default function Icon({
 }: IconProps) {
   return (
     <div
-      className="icon flex justify-center items-center cursor-pointer"
+      className="icon flex justify-center items-center "
       style={{ width: size, height: size }}
     >
       {children}

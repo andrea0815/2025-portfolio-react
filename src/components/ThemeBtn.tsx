@@ -24,7 +24,7 @@ function ThemeBtn() {
   return (
     <a
       onClick={handleClick}
-      className="cursor-pointer translate-y-1/4"
+      className=" translate-y-1/4"
     >
       {darkMode ? <ThemeLightIcon /> : <ThemeDarkIcon />}
     </a>

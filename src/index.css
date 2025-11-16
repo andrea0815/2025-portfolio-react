@@ -21,6 +21,7 @@
   --color-secondary: var(--color-yellow);
   --color-grayish: var(--color-gray-100-10);
   --color-highlight: var(--color-black);
+  --color-heading: var(--color-gray-200);
 
   --text-base: 14px;
 
@@ -62,6 +63,13 @@
 
   body {
     @apply bg-background;
+
+
+  }
+
+  body,
+  html {
+    cursor: none;
   }
 
   ::selection {
@@ -79,6 +87,8 @@
     --color-secondary: var(--color-khaki);
     --color-grayish: var(--color-gray-200-20);
     --color-highlight: var(--color-white);
+    --color-heading: var(--color-primary);
+
 
   }
 
@@ -110,10 +120,10 @@
     height: 0.8em;
   }
 
-  .terminal .line{
+  .terminal .line {
     @apply grid grid-cols-[auto_1fr] gap-x-2 w-full;
   }
-  
+
 
   .terminal .static,
   .terminal .output {

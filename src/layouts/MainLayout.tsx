@@ -4,26 +4,28 @@ import LogoBtn from '../components/LogoBtn';
 
 
 import Nav from "../components/Nav";
+import Heading from "../components/Heading";
 import SocialList from "../components/SocialList";
 import Terminal from "../components/Terminal";
+import CustomCursor from "../components/CustomCursor";
 
 function MainLayout() {
 
     const location = useLocation();
     const isHome = location.pathname === "/";
+    const isProjects = location.pathname === "/projects";
 
     return (
         <>
             <div
                 className="
-    fixed h-full w-full 
-    grid 
-    grid-cols-[var(--spacing-7)_1fr_var(--spacing-7)]
-    lg:grid-cols-[var(--spacing-8)_1fr_var(--spacing-8)]
-    grid-rows-[100dvh]            
-    [grid-template-areas:'sidebar_main_social']
-  "
-            >
+                    fixed h-full w-full 
+                    grid 
+                    grid-cols-[var(--spacing-7)_1fr_var(--spacing-7)]
+                    lg:grid-cols-[var(--spacing-8)_1fr_var(--spacing-8)]
+                    grid-rows-[100dvh]            
+                    [grid-template-areas:'sidebar_main_social']
+                ">
                 <div className="[grid-area:sidebar] flex flex-col justify-between items-center lg:py-6 py-4">
                     <LogoBtn />
                     <ThemeBtn />
@@ -42,13 +44,15 @@ function MainLayout() {
                 </div>
 
                 {!isHome && <Nav />}
+                {!isProjects && <Heading />}
 
                 <div className="[grid-area:social] flex flex-col items-center lg:py-6 py-4">
                     <SocialList />
                 </div>
             </div>
-
+            <CustomCursor />
         </>
+
 
     );
 }
