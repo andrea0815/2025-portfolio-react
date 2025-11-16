@@ -10,7 +10,7 @@ function LandingPage() {
   const enqueueMultiple = useTerminalQueue((s) => s.enqueueMultiple);
   const clearTerminalActives = useTerminalQueue((s) => s.clearActives);
   const landingText: string[] = terminalData.landing;
-
+  const exitText: string = terminalData.exit[0]
 
   useEffect(() => {
     enqueueMultiple(landingText);
@@ -19,6 +19,8 @@ function LandingPage() {
     }, 2000)
 
     return () => {
+      enqueueLine("");
+      enqueueLine(exitText, "landing");
       clearTerminalActives();
     };
   }, [])

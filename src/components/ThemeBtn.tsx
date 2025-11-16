@@ -1,17 +1,28 @@
 import { useMainStore } from '../stores/mainStore';
 import ThemeLightIcon from './icons/ThemeLightIcon';
 import ThemeDarkIcon from './icons/ThemeDarkIcon';
+import { useTerminalQueue } from "../stores/useTerminalQueue";
+import terminalData from "../terminal.json";
 
 function ThemeBtn() {
   const darkMode = useMainStore((s) => s.darkMode);
+  const changeThemeText: string = terminalData.theme[0]
+
   const toggleDarkMode = useMainStore((s) => s.toggleDarkMode);
+  const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
+  const clearActives = useTerminalQueue((s) => s.clearActives);
+
 
   function handleClick(): void {
+    clearActives();
     toggleDarkMode();
+    enqueueLine("");
+    enqueueLine(changeThemeText, "dark");
+
   }
 
   return (
-    <a 
+    <a
       onClick={handleClick}
       className="cursor-pointer translate-y-1/4"
     >

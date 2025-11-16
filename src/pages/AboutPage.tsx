@@ -13,12 +13,15 @@ function AboutPage() {
 
 
   const loadText: string = terminalData.loaded[0]
+  const exitText: string = terminalData.exit[0]
 
   useEffect(() => {
     enqueueLine("");
     enqueueLine(loadText, "about");
 
     return () => {
+      enqueueLine("");
+      enqueueLine(exitText, "about");
       clearTerminalActives();
     };
   }, [])

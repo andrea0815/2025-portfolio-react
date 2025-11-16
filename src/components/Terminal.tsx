@@ -93,10 +93,10 @@ export default function Terminal() {
 
 
                     return (
-                        <span key={line.id} className="line flex gap-2">
-                            <span className="static opacity-0">{staticText}</span>
+                        <span key={line.id} className="line grid grid-cols-[auto_1fr] gap-2">
+                            <span className="static opacity-0 flex-shrink-0">{staticText}</span>
                             <span
-                                className={`output opacity-100 ${isActive ? "active" : ""}`}
+                                className={`output break-all opacity-100 ${isActive ? "active" : ""}`}
                                 data-final-text={resolved}
                             ></span>
                         </span>

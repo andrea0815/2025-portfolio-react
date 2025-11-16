@@ -55,7 +55,7 @@ export const useTerminalQueue = create<TerminalQueueStore>((set) => ({
         );
       } else if (Array.isArray(lines) && typeof input === "string") {
         lines.forEach((line) =>
-          newLines.push({ id: Date.now() + Math.random(), text: line, input })
+          newLines.push({ id: Date.now() + Math.random(), text: line, input: input })
         );
       } else if (Array.isArray(lines) && Array.isArray(input)) {
         lines.forEach((line, i) =>

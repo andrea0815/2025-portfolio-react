@@ -12,10 +12,16 @@
     "exit": [
         ">> exit BLANK"
     ],
+    "theme": [
+        ">> change theme to <BLANK>"
+    ],
+    "link": [
+        ">> external link BLANK has been opened"
+    ],
     "landing": [
+        ">> enter landing",
         "",
-        ">> initialize project",
-        "",
+        "initialize project ...",
         "",
         "",
         "",
