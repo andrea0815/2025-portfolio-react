@@ -68,8 +68,16 @@
   }
 
   body,
-  html {
-    cursor: none;
+  html,
+  *,
+  *:hover {
+    cursor: none !important
+  }
+
+  .customCursor {
+    will-change: transform;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
   }
 
   ::selection {
@@ -90,6 +98,11 @@
     --color-heading: var(--color-primary);
 
 
+  }
+
+  .heading span div, .heading span, .heading {
+    color: inherit;
+    font-size: inherit;
   }
 
 
