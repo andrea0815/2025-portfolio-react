@@ -11,7 +11,6 @@ function AboutPage() {
   const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
   const clearTerminalActives = useTerminalQueue((s) => s.clearActives);
 
-
   const loadText: string = terminalData.loaded[0]
   const exitText: string = terminalData.exit[0]
 

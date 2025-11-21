@@ -40,17 +40,6 @@ function Heading() {
     scrambleReplay();
   }, [textIndex, textList, scrambleReplay]);
 
-  useEffect(() => {
-
-    gsap.to(".header *", {
-      "--wght": 900,
-      duration: 2,
-      ease: "sine.inOut",
-      repeat: -1,
-      yoyo: true
-    });
-  }, []);
-
 
   return (
     <div className='[grid-area:main] flex font-serif justify-center items-center z-10 pointer-events-none'>
@@ -58,17 +47,11 @@ function Heading() {
         ref={containerRef}
         onClick={handleClick}
         className='heading text-heading font-serif text-[7vw] text-center mix-blend-difference pointer-events-auto'
-      >&#123;
-
-        <span
-          ref={scrambleRef}
-          onMouseOver={scrambleReplay}
-          className="heading__text font-serif text-heading text-[7vw]"
-        >
+      >&#123; <span
+        ref={scrambleRef}
+        className="heading__text text-inherit font-inherit [font-size:inherit]">
           {textList[textIndex]}
-        </span>
-
-        &#125;
+        </span> &#125;
       </h1>
     </div>
   );

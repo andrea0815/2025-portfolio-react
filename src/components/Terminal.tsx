@@ -1,111 +1,100 @@
 import { useState, useEffect, useRef } from "react";
-import gsap from "gsap";
-import terminalData from "../terminal.json";
+import type { Line } from "../stores/useTerminalQueue";
 import { useTerminalQueue } from "../stores/useTerminalQueue";
-import { useScramble } from "use-scramble";
-
+import TerminalLine from "../components/TerminalLine";
 
 export default function Terminal() {
     const terminalRef = useRef<HTMLParagraphElement | null>(null);
 
-    // visible lines in the terminal
-    const lines = useTerminalQueue((s) => s.lines);
-    const addVisible = useTerminalQueue((s) => s.addVisible);
+    // Local states so Terminal re-renders ONLY when these change.
+    const [queue, setQueue] = useState<Line[]>([]);
+    const [isProcessing, setIsProcessing] = useState(false);
 
-    // queue from zustand
-    const queue = useTerminalQueue((s) => s.queue);
-    const dequeue = useTerminalQueue((s) => s.dequeue);
+    // The currently visible lines (immutable list)
+    const [lines, setLines] = useState<Line[]>([]);
 
-    // actives from zustand
-    const actives = useTerminalQueue((s) => s.actives);
+    // A registry of done-callbacks
+    const doneCallbacks = useRef<Map<number, () => void>>(new Map());
 
+    // ---------------------------------------
+    // SUBSCRIPTIONS (no re-renders of Terminal)
+    // ---------------------------------------
+    useEffect(() => {
+        const unsubQueue = useTerminalQueue.subscribe(
+            (s) => s.queue,
+            (val) => setQueue(val)
+        );
 
-    // static prefix
-    const [staticText, setStaticText] = useState<string>(terminalData.static[0]);
+        const unsubProcessing = useTerminalQueue.subscribe(
+            (s) => s.isProcessing,
+            (val) => setIsProcessing(val)
+        );
 
-    function animateLastLine(tl: gsap.core.Timeline) {
-        const lineEls = terminalRef.current?.querySelectorAll(".line");
-        if (!lineEls || lineEls.length === 0) return;
+        return () => {
+            unsubQueue();
+            unsubProcessing();
+        };
+    }, []);
 
-        const last = lineEls[lineEls.length - 1];
-        const staticEl = last.querySelector(".static") as HTMLElement | null;
-        const outputEl = last.querySelector(".output") as HTMLElement | null;
+    // Store actions (safe to select directly, no rerender risk)
+    const dequeue = useTerminalQueue.getState().dequeue;
+    const setProcessingAction = useTerminalQueue.getState().setProcessing;
 
-        if (!staticEl || !outputEl) return;
-
-        const finalText = outputEl.getAttribute("data-final-text") ?? "";
-
-        tl.to(staticEl, { opacity: 1, duration: 0 });
-
-        tl.to(outputEl, {
-            duration: 0.3,
-            ease: "linear",
-            scrambleText: {
-                text: finalText,
-                oldClass: "c",
-                newClass: "",
-                chars: "!+?%[$_:]#-{/*}",
-            },
-        });
-    }
-
-    // 👉 SEQUENCING: Process the queue one-by-one
+    // ---------------------------------------
+    // PROCESS QUEUE
+    // ---------------------------------------
     useEffect(() => {
         if (queue.length === 0) return;
+        if (isProcessing) return;
 
         const nextLine = queue[0];
-        addVisible(nextLine);
 
-        requestAnimationFrame(() => {
-            const tl = gsap.timeline({
-                onComplete() {
-                    dequeue();
-                },
-            });
+        // Update visible lines without re-rendering older TerminalLines
+        setLines((prev) => {
+            const stablePrev = prev.map((l) => ({
+                ...l,
+                animateNow: false, // all older lines do NOT animate
+            }));
 
-            animateLastLine(tl);
+            const newLine: Line = {
+                ...nextLine,
+                animateNow: true,
+            };
+
+            return [...stablePrev, newLine];
         });
-    }, [queue, dequeue]);
 
-    useEffect(() => {
-        function updateStaticText() {
-            if (window.innerWidth < 640) {
-                setStaticText(terminalData.static[1]);
-            } else {
-                setStaticText(terminalData.static[0]);
-            }
-        }
+        // Mark as processing in store (does not trigger rerender)
+        setProcessingAction(true);
 
-        updateStaticText();
-        window.addEventListener("resize", updateStaticText);
-        return () => window.removeEventListener("resize", updateStaticText);
-    }, []);
+        // Wait for TerminalLine to signal completion
+        const donePromise = new Promise<void>((resolve) => {
+            doneCallbacks.current.set(nextLine.id, resolve);
+        });
+
+        // Run after DOM is ready
+        requestAnimationFrame(async () => {
+            await donePromise;
+            dequeue();
+            setProcessingAction(false);
+        });
+    }, [queue, isProcessing]);
 
     return (
         <div className="flex flex-1 items-end self-end mix-blend-difference">
-            <p
-                ref={terminalRef}
-                className="terminal w-fit flex flex-col leading-[1.2em]"
-            >
-                {lines.map((line) => {
-                    const resolved =
-                        line.text.includes("BLANK") && line.input
-                            ? line.text.replace("BLANK", line.input)
-                            : line.text;
-
-                    const isActive = actives.some((a) => a.id === line.id);
-
-
-                    return (
-                        <span key={line.id} className="line grid grid-cols-[auto_1fr] gap-2">
-                            <span className="static opacity-0 flex-shrink-0">{staticText}</span>
-                            <span
-                                className={`output break-all opacity-100 ${isActive ? "active" : ""}`}
-                                data-final-text={resolved}
-                            ></span>
-                        </span>
-                    );
-                })}
+            <p ref={terminalRef} className="terminal w-fit flex flex-col leading-[1.2em]">
+                {lines.map((line) => (
+                    <TerminalLine
+                        key={line.id}
+                        text={line.text}
+                        animateNow={line.animateNow}
+                        onDone={() => {
+                            const cb = doneCallbacks.current.get(line.id);
+                            cb?.();
+                            doneCallbacks.current.delete(line.id);
+                        }}
+                    />
+                ))}
             </p>
         </div>
     );

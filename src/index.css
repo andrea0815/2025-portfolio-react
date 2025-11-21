@@ -101,15 +101,30 @@
 
   }
 
-  .heading span div,
-  .heading span,
-  .heading {
-    color: inherit;
-    font-size: inherit;
-  }
-
   .c {
     color: var(--color-secondary) !important;
+  }
+
+  @keyframes opacityHover {
+    0% {
+      opacity: 1;
+    }
+
+    25% {
+      opacity: 0.2;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    75% {
+      opacity: 0.5;
+    }
+
+    100% {
+      opacity: 1;
+    }
   }
 }
 
@@ -128,6 +143,8 @@
       opacity: 0;
     }
   }
+
+
 
   /* For blinking cursor in terminal */
   .terminal .line:last-of-type .output::after {
@@ -156,7 +173,7 @@
     @apply text-primary;
   }
 
-  .heading, .heading__text, .heading *,  .heading__text * {
+  .heading {
     --wght: 300;
     --cnst: 300;
     font-variation-settings: "wght" var(--wght) "cnst" var(--cnst);

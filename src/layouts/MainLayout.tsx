@@ -2,7 +2,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import ThemeBtn from '../components/ThemeBtn';
 import LogoBtn from '../components/LogoBtn';
 
-
 import Nav from "../components/Nav";
 import Heading from "../components/Heading";
 import SocialList from "../components/SocialList";
@@ -50,7 +49,7 @@ function MainLayout() {
                     <SocialList />
                 </div>
             </div>
-            <CustomCursor />
+           <CustomCursor />
         </>
 
 

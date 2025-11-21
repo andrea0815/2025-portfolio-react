@@ -18,7 +18,6 @@ function ThemeBtn() {
     toggleDarkMode();
     enqueueLine("");
     enqueueLine(changeThemeText, "dark");
-
   }
 
   return (

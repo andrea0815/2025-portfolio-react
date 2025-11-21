@@ -16,7 +16,7 @@ function ProjectPage() {
 
     return () => {
       enqueueLine("");
-      enqueueLine(exitText, "about");
+      enqueueLine(exitText, "projects");
       clearTerminalActives();
     };
   }, [])

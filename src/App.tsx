@@ -12,9 +12,6 @@ import {
 
 gsap.registerPlugin(ScrambleTextPlugin, SplitText);
 
-console.log(ScrambleTextPlugin);
-
-
 // Page imports
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";

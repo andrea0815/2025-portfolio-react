@@ -25,9 +25,7 @@ function SocialList() {
     clearActives();
     enqueueLine("");
     enqueueLine(">> you can contact me via mail:");
-    enqueueLine("");
-    enqueueLine(`>> ${link}`);
-
+    enqueueLine(`${link}`);
   }
 
   return (

@@ -9,6 +9,14 @@
     "loaded": [
         ">> enter BLANK"
     ],
+    "onPageLoad": [
+        "",
+        "initialize portfolio ...",
+        "",
+        "",
+        "",
+        ""
+    ],
     "exit": [
         ">> exit BLANK"
     ],
@@ -17,15 +25,6 @@
     ],
     "link": [
         ">> external link BLANK has been opened"
-    ],
-    "landing": [
-        "initialize portfolio ...",
-        "",
-        "",
-        "",
-        "",
-        ">> enter landing",
-        ""
     ],
     "workExperience": [
         "01-2019",

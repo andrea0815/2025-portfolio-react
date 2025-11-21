@@ -8,14 +8,14 @@ function LandingPage() {
   const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
   const enqueueMultiple = useTerminalQueue((s) => s.enqueueMultiple);
   const clearTerminalActives = useTerminalQueue((s) => s.clearActives);
-  const landingText: string[] = terminalData.landing;
+  const loadText: string = terminalData.loaded[0];
   const exitText: string = terminalData.exit[0]
 
   useEffect(() => {
-    enqueueMultiple(landingText);
-    setTimeout(() => {
-      enqueueLine(terminalData.greeting[0], "creative developer");
-    }, 2000)
+    enqueueLine("");
+    enqueueLine(loadText, "landing");
+    enqueueLine("");
+    enqueueLine(terminalData.greeting[0], "creative developer");
 
     return () => {
       enqueueLine("");
