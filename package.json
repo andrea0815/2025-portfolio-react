@@ -17,6 +17,7 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.9.6",
     "tailwindcss": "^4.1.17",
+    "use-scramble": "^2.2.15",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

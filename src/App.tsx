@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 
 import { SplitText } from "gsap/all";
+// @ts-ignore
 import { ScrambleTextPlugin } from "gsap/all";
 import {
   Route,
@@ -10,6 +11,9 @@ import {
 } from "react-router-dom";
 
 gsap.registerPlugin(ScrambleTextPlugin, SplitText);
+
+console.log(ScrambleTextPlugin);
+
 
 // Page imports
 import MainLayout from "./layouts/MainLayout";

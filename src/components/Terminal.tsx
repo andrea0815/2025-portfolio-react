@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import terminalData from "../terminal.json";
 import { useTerminalQueue } from "../stores/useTerminalQueue";
+import { useScramble } from "use-scramble";
+
 
 export default function Terminal() {
     const terminalRef = useRef<HTMLParagraphElement | null>(null);
@@ -40,6 +42,8 @@ export default function Terminal() {
             ease: "linear",
             scrambleText: {
                 text: finalText,
+                oldClass: "c",
+                newClass: "",
                 chars: "!+?%[$_:]#-{/*}",
             },
         });

@@ -3,7 +3,6 @@ import { useTerminalQueue } from "../stores/useTerminalQueue";
 import terminalData from "../terminal.json";
 import { NavLink } from "react-router-dom";
 
-
 function LandingPage() {
 
   const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
@@ -31,7 +30,6 @@ function LandingPage() {
     <div>
       Landing Page
       <NavLink to="/projects">&lt;projects&gt;</NavLink>
-
     </div>
   );
 }
