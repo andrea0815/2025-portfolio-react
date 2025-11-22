@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTerminalQueue } from "../stores/useTerminalQueue";
-import terminalData from "../terminal.json";
+import textData from "../texts.json";
 
 import InstagramIcon from './icons/InstagramIcon';
 import GithubIcon from './icons/GithubIcon';
@@ -12,7 +12,7 @@ function SocialList() {
 
   const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
   const clearActives = useTerminalQueue((s) => s.clearActives);
-  const linkText: string = terminalData.link[0]
+  const linkText: string = textData.link[0]
 
   function handleClick(link: string): void {
     clearActives();
@@ -24,7 +24,7 @@ function SocialList() {
   function handleMailClick(link: string): void {
     clearActives();
     enqueueLine("");
-    enqueueLine(">> you can contact me via mail:");
+    enqueueLine("you can contact me via mail:");
     enqueueLine(`${link}`);
   }
 

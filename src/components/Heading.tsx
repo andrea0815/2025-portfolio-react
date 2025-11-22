@@ -1,15 +1,16 @@
 import { useLocation } from "react-router-dom";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useScramble } from "use-scramble";
-import { SplitText } from "gsap/SplitText";
-import gsap from "gsap";
-
+import { useTerminalQueue } from "../stores/useTerminalQueue";
+import textData from "../texts.json";
 
 function Heading() {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const aboutTexts = ["hello :)", "hi :)", "heey :)", "heyho :)"];
   const homeTexts = ["creative developer", "illustrator", "writer", "graphic designer"];
+
+  const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
 
   const [textList, setTextList] = useState<string[]>(isHome ? homeTexts : aboutTexts);
   const [textIndex, setTextIndex] = useState<number>(0);
@@ -36,8 +37,8 @@ function Heading() {
     const newIndex = (textIndex + 1) % textList.length;
     setTextIndex(newIndex);
 
-    // update the hook with new text and trigger it
     scrambleReplay();
+    enqueueLine(textData.greeting[0], textList[newIndex]);
   }, [textIndex, textList, scrambleReplay]);
 
 

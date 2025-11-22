@@ -1,60 +1,90 @@
-import gsap from "gsap";
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTerminalQueue } from "../stores/useTerminalQueue";
-import { useGSAP } from "@gsap/react";
-import terminalData from "../terminal.json";
+import textData from "../texts.json";
+import { useScramble } from "use-scramble";
+import { usePageTransition } from "../stores/usePageTransition";
+import { useNavigate } from "react-router-dom";
+
 
 function AboutPage() {
 
-  const aboutText = useRef<HTMLParagraphElement | null>(null);
+  const navigate = useNavigate();
+  const {
+    isTransitioning,
+    registerAnimation,
+    finishAnimation,
+    targetRoute,
+  } = usePageTransition();
 
-  const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
-  const clearTerminalActives = useTerminalQueue((s) => s.clearActives);
+  const enqueueLine = useTerminalQueue(s => s.enqueueLine);
+  const clearTerminalActives = useTerminalQueue(s => s.clearActives);
 
-  const loadText: string = terminalData.loaded[0]
-  const exitText: string = terminalData.exit[0]
+  const aboutText =
+    "i come from Vienna and after my graphic design education i did a degree in Creative Computing to enhance my coding skills. mostly, i design and develop websites or apps, but i also love to illustrate or do photography. simply put – i love to learn new skills and tools.";
 
+  const [output, setOutput] = useState(aboutText);
+
+  // --- GUARDS ---
+  const exitStarted = useRef(false);
+  const animationFinished = useRef(false);
+
+  const { ref: scrambleRef, replay: replayScramble } = useScramble({
+    text: output,
+    scramble: 4,
+    speed: 3,
+    ignore: [" "],
+    overdrive: true,
+    range: [33, 47],
+    onAnimationEnd: () => {
+      if (!exitStarted.current) return;     // ignore initial animation
+      if (animationFinished.current) return;
+
+      animationFinished.current = true;
+      finishAnimation();                     // call once
+    },
+  });
+
+  // Initial load effect
   useEffect(() => {
     enqueueLine("");
-    enqueueLine(loadText, "about");
+    enqueueLine(textData.loaded[0], "about");
+
+    replayScramble();
 
     return () => {
       enqueueLine("");
-      enqueueLine(exitText, "about");
+      enqueueLine(textData.exit[0], "about");
       clearTerminalActives();
     };
-  }, [])
+  }, []);
 
-  useGSAP(
-    () => {
-      if (!aboutText.current) return;
+  // Exit animation trigger
+  useEffect(() => {
+    if (!isTransitioning || exitStarted.current) return;
 
-      const originalText: string = aboutText.current.innerHTML;
+    exitStarted.current = true;
 
-      gsap.fromTo(
-        aboutText.current,
-        {
-          scrambleText: { text: "" },
-        },
-        {
-          duration: 5,
-          ease: "linear",
-          scrambleText: {
-            text: originalText,
-            chars: "!+?%[$_:]#-{/*}",
-          },
-        }
-      );
-    },
-    { dependencies: [], scope: aboutText } // best practice
-  );
+    registerAnimation();            // only once
 
+    setOutput("");                  // start exit
+    replayScramble();
+    
+}, [isTransitioning]);
 
-  return (
-    <div className='flex items-end'>
-      <p ref={aboutText}>i come from Vienna and after my graphic design education i did a degree in Creative Computing to enhance my coding skills. mostly, i design and develop websites or apps, but i also love to illustrate or do photography. simply put  – i love to learn new skills and tools.</p>
-    </div>
-  );
+// Navigation when finished
+useEffect(() => {
+  if (!isTransitioning && targetRoute) {
+    console.log("navigate to " + targetRoute);
+    navigate(targetRoute);
+  }
+}, [isTransitioning]);
+
+return (
+  <div className="w-full">
+    <p ref={scrambleRef}></p>
+  </div>
+);
 }
+
 
 export default AboutPage;

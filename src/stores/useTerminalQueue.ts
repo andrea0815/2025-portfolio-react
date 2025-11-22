@@ -42,12 +42,12 @@ export const useTerminalQueue = create(
 
 
     enqueueLine: (text, input = null) => {
-      const nextId = get().lineCounter + 1;
-
+      const nextId = get().lineCounter + 1;      
+      
       const resolved = text.includes("BLANK") && input
-        ? text.replace("BLANK", input)
-        : text;
-
+      ? text.replace("BLANK", input)
+      : text;
+      
       const line: Line = {
         id: nextId,
         text: resolved,

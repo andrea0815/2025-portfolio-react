@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { memo } from "react";
 import { useScramble } from "use-scramble";
-import terminalData from "../terminal.json";
-import type { Line } from "../stores/useTerminalQueue";
 import { useTerminalQueue } from "../stores/useTerminalQueue";
-import { shallow } from "zustand/shallow";
+import textData from "../texts.json";
 
 
 type LineProps = {
@@ -20,7 +18,7 @@ function TerminalLine({
 }: LineProps) {
 
     const [hasAnimated, setHasAnimated] = useState(false);
-    const [staticText, setStaticText] = useState<string>(terminalData.static[0]);
+    const [staticText, setStaticText] = useState<string>(textData.static[0]);
 
     const clearSignal = useTerminalQueue(s => s.clearActiveSignal);
 
@@ -29,15 +27,10 @@ function TerminalLine({
     const { ref: outputRef, replay } = useScramble({
         text,
         scramble: 4,
-        speed: 0.7,
-        overdrive: true,
-
-        onAnimationStart() {
-            console.log("Scramble started:", text);
-        },
+        speed: 1,
+        overdrive: false,
 
         onAnimationEnd() {
-            console.log("Scramble ended:", text);
             setHasAnimated(true);
             onDone();
         }
@@ -47,6 +40,8 @@ function TerminalLine({
         if (!animateNow) return;
         if (hasAnimated) return;
 
+        console.log(text);
+
         replay();
     }, [animateNow, hasAnimated]);
 
@@ -54,9 +49,9 @@ function TerminalLine({
         function updateStaticText() {
 
             if (window.innerWidth < 640) {
-                setStaticText(terminalData.static[1]);
+                setStaticText(textData.static[1]);
             } else {
-                setStaticText(terminalData.static[0]);
+                setStaticText(textData.static[0]);
             }
         }
 

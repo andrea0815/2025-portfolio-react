@@ -21,7 +21,7 @@
         ">> exit BLANK"
     ],
     "theme": [
-        ">> change theme to <BLANK>"
+        ">> change theme to &lt;BLANK&gt"
     ],
     "link": [
         ">> external link BLANK has been opened"

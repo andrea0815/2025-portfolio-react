@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTerminalQueue } from "../stores/useTerminalQueue";
-import terminalData from "../terminal.json";
+import textData from "../texts.json";
 import { NavLink } from "react-router-dom";
 
 function LandingPage() {
@@ -8,14 +8,14 @@ function LandingPage() {
   const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
   const enqueueMultiple = useTerminalQueue((s) => s.enqueueMultiple);
   const clearTerminalActives = useTerminalQueue((s) => s.clearActives);
-  const loadText: string = terminalData.loaded[0];
-  const exitText: string = terminalData.exit[0]
+  const loadText: string = textData.loaded[0];
+  const exitText: string = textData.exit[0]
 
   useEffect(() => {
     enqueueLine("");
     enqueueLine(loadText, "landing");
     enqueueLine("");
-    enqueueLine(terminalData.greeting[0], "creative developer");
+    enqueueLine(textData.greeting[0], "creative developer");
 
     return () => {
       enqueueLine("");
