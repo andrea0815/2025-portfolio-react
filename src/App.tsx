@@ -1,6 +1,6 @@
 import gsap from 'gsap';
-
 import { SplitText } from "gsap/all";
+
 // @ts-ignore
 import { ScrambleTextPlugin } from "gsap/all";
 import {
@@ -20,6 +20,7 @@ import AboutPage from "./pages/AboutPage";
 import PageNotFound from "./pages/PageNotFound";
 
 function App() {
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<MainLayout />}>

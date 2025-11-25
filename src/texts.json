@@ -96,5 +96,19 @@
         {
             "title": "nosic nasal spray"
         }
+    ],
+    "sections": [
+        "creative developer",
+        "illustrator",
+        "graphic designer",
+        "writer",
+        "photographer",
+        ""
+    ],
+    "aboutTexts": [
+        "hi",
+        "hello",
+        "heyoo",
+        "heeey"
     ]
 }

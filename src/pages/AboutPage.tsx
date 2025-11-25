@@ -58,7 +58,8 @@ function AboutPage() {
     };
   }, []);
 
-  // Exit animation trigger
+  // PAGE TRANSITION
+
   useEffect(() => {
     if (!isTransitioning || exitStarted.current) return;
 
@@ -68,22 +69,21 @@ function AboutPage() {
 
     setOutput("");                  // start exit
     replayScramble();
-    
-}, [isTransitioning]);
 
-// Navigation when finished
-useEffect(() => {
-  if (!isTransitioning && targetRoute) {
-    console.log("navigate to " + targetRoute);
-    navigate(targetRoute);
-  }
-}, [isTransitioning]);
+  }, [isTransitioning]);
 
-return (
-  <div className="w-full">
-    <p ref={scrambleRef}></p>
-  </div>
-);
+  // Navigation when finished
+  useEffect(() => {
+    if (!isTransitioning && targetRoute) {
+      navigate(targetRoute);
+    }
+  }, [isTransitioning]);
+
+  return (
+    <div className="w-full">
+      <p ref={scrambleRef}></p>
+    </div>
+  );
 }
 
 

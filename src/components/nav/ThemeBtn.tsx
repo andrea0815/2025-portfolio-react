@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useMainStore } from '../stores/mainStore';
-import ThemeLightIcon from './icons/ThemeLightIcon';
-import ThemeDarkIcon from './icons/ThemeDarkIcon';
-import { useTerminalQueue } from "../stores/useTerminalQueue";
-import textData from "../texts.json";
+import { useMainStore } from '../../stores/mainStore';
+import ThemeLightIcon from '../icons/ThemeLightIcon';
+import ThemeDarkIcon from '../icons/ThemeDarkIcon';
+import { useTerminalQueue } from "../../stores/useTerminalQueue";
+import textData from "../../texts.json";
 
 function ThemeBtn() {
   const darkMode = useMainStore((s) => s.darkMode);

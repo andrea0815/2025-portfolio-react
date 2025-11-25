@@ -32,8 +32,10 @@ function ProjectPage() {
     };
   }, [])
 
+  // PAGE TRANSITION
+
   useEffect(() => {
-   completeTransition();
+    completeTransition();
 
   }, [isTransitioning]);
 

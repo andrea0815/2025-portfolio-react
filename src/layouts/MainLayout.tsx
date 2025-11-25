@@ -1,18 +1,30 @@
 import { Outlet, useLocation } from "react-router-dom";
-import ThemeBtn from '../components/ThemeBtn';
-import LogoBtn from '../components/LogoBtn';
+import { usePageTransition } from "../stores/usePageTransition";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-import Nav from "../components/Nav";
+import ThemeBtn from '../components/nav/ThemeBtn';
+import LogoBtn from '../components/nav/LogoBtn';
+
+import Nav from "../components/nav/Nav";
 import Heading from "../components/Heading";
 import SocialList from "../components/SocialList";
 import Terminal from "../components/Terminal";
 import CustomCursor from "../components/CustomCursor";
+
 
 function MainLayout() {
 
     const location = useLocation();
     const isHome = location.pathname === "/";
     const isProjects = location.pathname === "/projects";
+
+    const navigate = useNavigate();
+    const setNavigateFn = usePageTransition((s) => s.setNavigateFn);
+
+    useEffect(() => {
+        setNavigateFn(navigate);
+    }, []);
 
     return (
         <>
@@ -49,7 +61,7 @@ function MainLayout() {
                     <SocialList />
                 </div>
             </div>
-           <CustomCursor />
+            <CustomCursor />
         </>
 
 

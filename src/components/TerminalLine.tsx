@@ -4,7 +4,6 @@ import { useScramble } from "use-scramble";
 import { useTerminalQueue } from "../stores/useTerminalQueue";
 import textData from "../texts.json";
 
-
 type LineProps = {
     text: string;
     animateNow: boolean
@@ -19,9 +18,6 @@ function TerminalLine({
 
     const [hasAnimated, setHasAnimated] = useState(false);
     const [staticText, setStaticText] = useState<string>(textData.static[0]);
-
-    const clearSignal = useTerminalQueue(s => s.clearActiveSignal);
-
     const [isActive, setIsActive] = useState(true);
 
     const { ref: outputRef, replay } = useScramble({
@@ -40,9 +36,8 @@ function TerminalLine({
         if (!animateNow) return;
         if (hasAnimated) return;
 
-        console.log(text);
-
         replay();
+
     }, [animateNow, hasAnimated]);
 
     useEffect(() => {

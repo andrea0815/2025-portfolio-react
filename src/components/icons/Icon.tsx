@@ -9,7 +9,7 @@ export default function Icon({
 }: IconProps) {
   return (
     <div
-      className="icon flex justify-center items-center "
+      className="icon flex justify-center items-center hoverFlicker"
       style={{ width: size, height: size }}
     >
       {children}

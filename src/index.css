@@ -105,6 +105,10 @@
     color: var(--color-secondary) !important;
   }
 
+  .hoverFlicker:hover {
+    animation: opacityHover 0.1s linear infinite;
+  }
+
   @keyframes opacityHover {
     0% {
       opacity: 1;
@@ -174,9 +178,37 @@
   }
 
   .heading {
-    --wght: 300;
-    --cnst: 300;
-    font-variation-settings: "wght" var(--wght) "cnst" var(--cnst);
+    font-variation-settings: "wght" 0 "CNST" 300;
+    animation: variableAnimation 5s linear infinite;
+  }
+
+  .heading * {
+    animation: variableAnimation 10s linear infinite;
+    animation-delay: -2s;
+
+  }
+
+  @keyframes variableAnimation {
+    0% {
+      font-variation-settings: "CNST" 0, "wght" 300;
+    }
+
+    25% {
+      font-variation-settings: "CNST" 50, "wght" 400;
+    }
+
+    50% {
+      font-variation-settings: "CNST" 100, "wght" 300;
+    }
+
+    75% {
+      font-variation-settings: "CNST" 50, "wght" 900;
+    }
+
+    100% {
+      font-variation-settings: "CNST" 0, "wght" 300;
+    }
+
   }
 
 }

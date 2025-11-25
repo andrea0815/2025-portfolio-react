@@ -10,11 +10,30 @@ type PageTransitionStore = {
 
     requestTransition: (route: string) => void;
     completeTransition: () => void;
+
+    navigateFn: ((route: string) => void) | null;
+    setNavigateFn: (fn: (route: string) => void) => void;
+    navigate: (() => void) | null;
 };
 
 export const usePageTransition = create<PageTransitionStore>((set, get) => ({
     targetRoute: null,
     isTransitioning: false,
+
+    navigateFn: null,
+    setNavigateFn: (fn) => set({ navigateFn: fn }),
+    
+    navigate: () => {
+        const { pendingAnimations, targetRoute, navigateFn } = get();
+        if (pendingAnimations === 0 && targetRoute) {
+            get().completeTransition();
+            console.log(navigateFn);
+
+            if (navigateFn) {
+                navigateFn(targetRoute);
+            }
+        }
+    },
 
     pendingAnimations: 0,
     registerAnimation: () =>
@@ -24,10 +43,9 @@ export const usePageTransition = create<PageTransitionStore>((set, get) => ({
         set((s) => ({ pendingAnimations: s.pendingAnimations - 1 }));
 
         // if no animations left → complete transition
-        const { pendingAnimations, targetRoute } = get();
-        if (pendingAnimations === 0 && targetRoute) {
-            
-            get().completeTransition();
+        const { navigate } = get();
+        if (navigate) {
+            navigate()
         }
     },
 
