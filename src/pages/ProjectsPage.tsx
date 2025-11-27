@@ -3,6 +3,7 @@ import { useTerminalQueue } from "../stores/useTerminalQueue";
 import textData from "../texts.json";
 import { usePageTransition } from "../stores/usePageTransition";
 import { useNavigate } from "react-router-dom";
+import ScrambleText from "../components/base/scrambleText";
 
 function ProjectPage() {
 
@@ -47,6 +48,7 @@ function ProjectPage() {
 
   return (
     <div>
+      <ScrambleText text="projects page"></ScrambleText>
       Project Page
     </div>
   );

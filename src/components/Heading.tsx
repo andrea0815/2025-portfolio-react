@@ -10,27 +10,34 @@ import gsap from "gsap";
 
 function Heading() {
   const location = useLocation();
-  const isHome = location.pathname === "/";
+  const isLanding = location.pathname === "/";
+  const isProjects = location.pathname === "/projects";
+  const isAbout = location.pathname === "/about";
   const aboutTexts = ["hello :)", "hi :)", "heey :)", "heyho :)"];
-  const homeTexts = textData.sections;
+  const landingTexts = textData.sections;
 
   const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
   const clearActives = useTerminalQueue((s) => s.clearActives);
 
-  const [textList, setTextList] = useState<string[]>(isHome ? homeTexts : aboutTexts);
+  const [textList, setTextList] = useState<string[]>(isLanding ? landingTexts : aboutTexts);
   const [textIndex, setTextIndex] = useState<number>(0);
+  const [text, setText] = useState<string>("");
 
   useEffect(() => {
-    setTextList(isHome ? homeTexts : aboutTexts);
+    if (isLanding) {
+      setTextList(landingTexts)
+    }  else if (isAbout) {
+      setTextList(aboutTexts)
+    }
     setTextIndex(0);
-  }, [isHome]);
+  }, [isLanding, isProjects]);
 
   const containerRef = useRef<HTMLHeadingElement | null>(null);
 
   const { ref: scrambleRef, replay } = useScramble({
     text: textList[textIndex],
     scramble: 4,
-    speed: 1,
+    speed: 0.5,
     ignore: [" "],
     playOnMount: false,
     overflow: false,
@@ -50,15 +57,41 @@ function Heading() {
     }, "+=0.2");
   }, []);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (isProjects) {
+      // fade out
+      gsap.to(el, {
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        pointerEvents: "none"
+      });
+    } else {
+      // fade in
+      gsap.to(el, {
+        opacity: 1,
+        duration: 0.6,
+        ease: "power2.out",
+        pointerEvents: "auto"
+      });
+    }
+  }, [isProjects]);
+
   const handleClick = useCallback(() => {
-    clearActives();
+    if (!isProjects) {
 
-    const newIndex = (textIndex + 1) % textList.length;
-    setTextIndex(newIndex);
+      clearActives();
 
-    replay();
+      const newIndex = (textIndex + 1) % textList.length;
+      setTextIndex(newIndex);
 
-    enqueueLine(textData.greeting[0], textList[newIndex]);
+      replay();
+
+      enqueueLine(textData.greeting[0], textList[newIndex]);
+    }
   }, [textIndex, textList]);
 
 
@@ -67,7 +100,7 @@ function Heading() {
       <h1
         ref={containerRef}
         onClick={handleClick}
-        className='heading text-heading font-serif text-[7vw] text-center  pointer-events-auto'
+        className='heading hoverEl text-heading font-serif text-[7vw] text-center  pointer-events-auto'
       >&#123; <span
         ref={scrambleRef}
         className="heading__text text-inherit font-[inherit] [font-size:inherit]">

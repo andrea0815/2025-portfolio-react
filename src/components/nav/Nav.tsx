@@ -1,26 +1,21 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { usePageTransition } from "../../stores/usePageTransition";
-import { useScramble } from "use-scramble";
+import gsap from "gsap";
+import { useEffect, useRef } from "react";
+import ScrambleText from "../base/scrambleText";
+import NavSide from "./NavSide";
 
 function Nav() {
+    const location = useLocation();
+    const isLanding = location.pathname === "/";
     const requestTransition = usePageTransition((s) => s.requestTransition);
-    const location = useLocation(); // for checking current path
+
+    const navRef = useRef<HTMLDivElement | null>(null);
 
     const linkClass = ({ isActive }: { isActive: boolean }) =>
         isActive
             ? "text-text-highlight px-4 pt-2 pb-2 border-1 rounded-4xl border-text-highlight"
             : "text-text px-4 pt-2 pb-2 border-1 rounded-4xl border-transparent";
-
-    // const scrambleProps = {
-    //     text: currentTarget,
-    //     scramble: 4,
-    //     speed: 3,
-    //     ignore: [" "],
-    //     overdrive: true,
-    //     range: [33, 47]
-    // }
-
-    // const { ref: currentTarget, replay: replayScramble } = useScramble(scrambleProps);
 
     function handleClick(
         e: React.MouseEvent<HTMLAnchorElement>,
@@ -28,20 +23,46 @@ function Nav() {
     ) {
         e.preventDefault();
         if (location.pathname === to) return;
-        // replayScramble();
-        requestTransition(to); 
+        requestTransition(to);
     }
 
+    // animate on path change
+    useEffect(() => {
+        const el = navRef.current;
+        if (!el) return;
+
+        if (isLanding) {
+            // fade out
+            gsap.to(el, {
+                opacity: 0,
+                duration: 0.6,
+                ease: "power2.out",
+                pointerEvents: "none"
+            });
+        } else {
+            // fade in
+            gsap.to(el, {
+                opacity: 1,
+                duration: 0.6,
+                ease: "power2.out",
+                pointerEvents: "auto"
+            });
+        }
+    }, [isLanding]);
+
     return (
-        <div className="lg:pt-6 pt-4 [grid-area:main] self-start z-50 flex flex-row items-center">
-            <div className="flex flex-row px-2 py-2 bg-grayish gap-2 w-fit rounded-4xl">
+        <div
+            ref={navRef}
+            className="lg:pt-6 pt-4 [grid-area:main] hoverEl self-start z-50 flex flex-row items-center opacity-0"
+        >
+            <div className=" hoverEl flex flex-row px-2 py-2 bg-grayish gap-2 w-fit rounded-4xl">
 
                 <NavLink
                     to="/projects"
                     className={linkClass}
                     onClick={(e) => handleClick(e, "/projects")}
                 >
-                    &lt;projects&gt;
+                    &lt;<ScrambleText text="projects"/>&gt;
                 </NavLink>
 
                 <NavLink
@@ -49,14 +70,12 @@ function Nav() {
                     className={linkClass}
                     onClick={(e) => handleClick(e, "/about")}
                 >
-                    &lt;about&gt;
+                    &lt;<ScrambleText text="about"/>&gt;
                 </NavLink>
 
             </div>
 
-            <p>
-                <span>Creative Computing</span>
-            </p>
+            <NavSide />
         </div>
     );
 }

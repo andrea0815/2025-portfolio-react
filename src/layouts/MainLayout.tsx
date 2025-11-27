@@ -54,8 +54,8 @@ function MainLayout() {
                     </div>
                 </div>
 
-                {!isHome && <Nav />}
-                {!isProjects && <Heading />}
+                <Nav />
+                <Heading />
 
                 <div className="[grid-area:social] flex flex-col items-center lg:py-6 py-4">
                     <SocialList />

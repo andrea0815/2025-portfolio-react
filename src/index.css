@@ -7,7 +7,7 @@
   --color-yellow: #DAD53C;
   --color-khaki: #A79513;
   --color-white: #FFFFFF;
-  --color-white: #FFFFFF;
+  --color-white-off: #BBBBBB;
   --color-black: #111111;
   --color-gray-100: #898989;
   --color-gray-100-10: rgba(230, 230, 230, 0.6);
@@ -22,6 +22,7 @@
   --color-grayish: var(--color-gray-100-10);
   --color-highlight: var(--color-black);
   --color-heading: var(--color-gray-200);
+  --color-cursor: var(--color-white);
 
   --text-base: 14px;
 
@@ -51,9 +52,8 @@
     font-weight: 300;
     /* letter-spacing: 0.03em; */
     color: var(--color-text);
-    font-weight: 400;
-    font-variation-settings: "MONO" 400;
-
+    font-weight: 300;
+    font-variation-settings: "MONO" 1000;
     transition:
       background-color 0.3s ease,
       color 0.3s ease,
@@ -68,11 +68,33 @@
 
   }
 
-  body,
-  html,
-  *,
+  /* CURSOR */
+
+  html {
+    cursor: none !important;
+  }
+
+  * {
+    cursor: none !important;
+  }
+
   *:hover {
-    cursor: none !important
+    cursor: none !important;
+  }
+
+  a {
+    cursor: none !important;
+  }
+
+  a,
+  a:hover,
+  a:active,
+  a:focus,
+  button,
+  button:hover,
+  button:focus,
+  button:active {
+    cursor: none !important;
   }
 
   .customCursor {
@@ -97,8 +119,7 @@
     --color-grayish: var(--color-gray-200-20);
     --color-highlight: var(--color-white);
     --color-heading: var(--color-primary);
-
-
+    --color-cursor: var(--color-white);
   }
 
   .c {

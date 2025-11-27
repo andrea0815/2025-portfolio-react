@@ -27,7 +27,6 @@ export const usePageTransition = create<PageTransitionStore>((set, get) => ({
         const { pendingAnimations, targetRoute, navigateFn } = get();
         if (pendingAnimations === 0 && targetRoute) {
             get().completeTransition();
-            console.log(navigateFn);
 
             if (navigateFn) {
                 navigateFn(targetRoute);

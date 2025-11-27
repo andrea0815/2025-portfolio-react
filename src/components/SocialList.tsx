@@ -31,19 +31,19 @@ function SocialList() {
   return (
     <div className='flex flex-col gap-5'>
 
-      <div onClick={() => { handleMailClick("andrea.windisch@gmx.net") }} className="translate-y-1/4">
+      <div onClick={() => { handleMailClick("mail@andreawindisch.com") }} className="hoverEl translate-y-1/4">
         <MailIcon />
       </div>
 
-      <Link to={'https://www.instagram.com/andrea_windisch_/'} onClick={() => { handleClick("https://www.instagram.com/andrea_windisch_/") }} target="_blank" className="translate-y-1/4">
+      <Link to={'https://www.instagram.com/andrea_windisch_/'} onClick={() => { handleClick("https://www.instagram.com/andrea_windisch_/") }} target="_blank" className="hoverEl translate-y-1/4">
         <InstagramIcon />
       </Link>
 
-      <Link to={'https://github.com/andrea0815'} onClick={() => { handleClick("https://github.com/andrea0815") }} target="_blank" className="translate-y-1/4">
+      <Link to={'https://github.com/andrea0815'} onClick={() => { handleClick("https://github.com/andrea0815") }} target="_blank" className="hoverEl translate-y-1/4">
         <GithubIcon />
       </Link>
 
-      <Link to={'https://www.linkedin.com/in/andrea-windisch-16849518b/'} onClick={() => { handleClick("https://www.linkedin.com/in/andrea-windisch-16849518b/") }} target="_blank" className="translate-y-1/4">
+      <Link to={'https://www.linkedin.com/in/andrea-windisch-16849518b/'} onClick={() => { handleClick("https://www.linkedin.com/in/andrea-windisch-16849518b/") }} target="_blank" className="hoverEl translate-y-1/4">
         <LinkedInIcon />
       </Link>
 
