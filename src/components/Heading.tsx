@@ -13,7 +13,7 @@ function Heading() {
   const isLanding = location.pathname === "/";
   const isProjects = location.pathname === "/projects";
   const isAbout = location.pathname === "/about";
-  const aboutTexts = ["hello :)", "hi :)", "heey :)", "heyho :)"];
+  const aboutTexts = textData.aboutTexts;
   const landingTexts = textData.sections;
 
   const enqueueLine = useTerminalQueue((s) => s.enqueueLine);

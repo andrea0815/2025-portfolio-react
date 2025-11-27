@@ -1,14 +1,10 @@
-import gsap from 'gsap';
-import { SplitText } from "gsap/all";
-
+import { useEffect } from "react";
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
+import { useContentful } from "./stores/useContentful";
 // @ts-ignore
 import { ScrambleTextPlugin } from "gsap/all";
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider
-} from "react-router-dom";
+import { SplitText } from "gsap/all";
+import gsap from 'gsap';
 
 gsap.registerPlugin(ScrambleTextPlugin, SplitText);
 
@@ -20,6 +16,12 @@ import AboutPage from "./pages/AboutPage";
 import PageNotFound from "./pages/PageNotFound";
 
 function App() {
+
+  const fetchAll = useContentful((s) => s.fetchAll);
+
+  useEffect(() => {
+    fetchAll();
+  }, []);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
