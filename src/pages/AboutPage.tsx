@@ -81,7 +81,10 @@ function AboutPage() {
 
   return (
     <div className="w-full">
-      <p ref={scrambleRef}></p>
+      <p
+        ref={scrambleRef}
+        className='leading-[1.8] [font-variation-settings:"MONO"_100]'
+      ></p>
     </div>
   );
 }

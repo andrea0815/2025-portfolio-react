@@ -98,12 +98,11 @@
         }
     ],
     "sections": [
-        "creative developer",
+        "creative_developer",
         "illustrator",
-        "graphic designer",
+        "graphic_designer",
         "writer",
-        "photographer",
-        ""
+        "photographer"
     ],
     "aboutTexts": [
         "hi",

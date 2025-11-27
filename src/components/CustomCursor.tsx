@@ -18,7 +18,7 @@ function CustomCursor() {
     };
 
     const grow = () => {
-      gsap.to(cursor, { scale: 3, duration: 0.25, ease: "power3.out" });
+      gsap.to(cursor, { scale: 2, duration: 0.25, ease: "power3.out" });
     };
 
     const shrink = () => {

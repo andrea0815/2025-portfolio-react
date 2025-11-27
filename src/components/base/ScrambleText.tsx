@@ -3,13 +3,10 @@ import { useScramble } from "use-scramble";
 
 type ScrambleTextProps = {
     text: string;
+    isStatic?: boolean;
 };
 
-function ScrambleText({text}: ScrambleTextProps) {
-
-    useEffect(() => {
-
-    }, [text])
+function ScrambleText({ text, isStatic = false }: ScrambleTextProps) {
 
     const { ref: textEl, replay } = useScramble({
         text: text,
@@ -20,8 +17,15 @@ function ScrambleText({text}: ScrambleTextProps) {
         overflow: true,
     });
 
-    const handleClick = () => {
+    useEffect(() => {
         replay();
+
+    }, [])
+
+    const handleClick = () => {
+        if (!isStatic) {
+            replay();
+        }
     }
 
     return (
@@ -29,7 +33,7 @@ function ScrambleText({text}: ScrambleTextProps) {
             ref={textEl}
             onMouseEnter={handleClick}
             onClick={handleClick}
-            className="inline-block text-inherit font-[inherit] [font-size:inherit]"
+            className="text-inherit font-[inherit] [font-size:inherit] hover:text-text-highlight"
         >
             {text}
         </p>

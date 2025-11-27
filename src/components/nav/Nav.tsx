@@ -14,8 +14,8 @@ function Nav() {
 
     const linkClass = ({ isActive }: { isActive: boolean }) =>
         isActive
-            ? "text-text-highlight px-4 pt-2 pb-2 border-1 rounded-4xl border-text-highlight"
-            : "text-text px-4 pt-2 pb-2 border-1 rounded-4xl border-transparent";
+            ? "text-text-highlight flex flex-row px-4 pt-2 pb-2 border-1 rounded-4xl border-text-highlight"
+            : "text-text px-4 pt-2 flex flex-row pb-2 border-1 rounded-4xl border-transparent";
 
     function handleClick(
         e: React.MouseEvent<HTMLAnchorElement>,
@@ -51,9 +51,9 @@ function Nav() {
     }, [isLanding]);
 
     return (
-        <div
+        <nav
             ref={navRef}
-            className="lg:pt-6 pt-4 [grid-area:main] hoverEl self-start z-50 flex flex-row items-center opacity-0"
+            className="lg:pt-6 pt-4 [grid-area:main] hoverEl self-start z-50 flex flex-row flex-wrap items-center opacity-0"
         >
             <div className=" hoverEl flex flex-row px-2 py-2 bg-grayish gap-2 w-fit rounded-4xl">
 
@@ -76,7 +76,7 @@ function Nav() {
             </div>
 
             <NavSide />
-        </div>
+        </nav>
     );
 }
 

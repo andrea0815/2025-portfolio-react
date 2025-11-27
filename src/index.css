@@ -122,6 +122,12 @@
     --color-cursor: var(--color-white);
   }
 
+  nav>*{
+    height: 43px;
+    display: flex;
+    align-items: center;
+  }
+
   .c {
     color: var(--color-secondary) !important;
   }

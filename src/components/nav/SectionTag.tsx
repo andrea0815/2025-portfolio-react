@@ -1,10 +1,10 @@
 import ScrambleText from '../base/scrambleText';
 
-type FilterTagProps = {
+type SectionTagProps = {
   text: string;
 };
 
-function FilterTag({ text }: FilterTagProps) {
+function SectionTag({ text }: SectionTagProps) {
 
   console.log(text);
 
@@ -19,4 +19,4 @@ function FilterTag({ text }: FilterTagProps) {
   );
 }
 
-export default FilterTag;
+export default SectionTag;
