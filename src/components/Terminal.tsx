@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import type { Line } from "../stores/useTerminalQueue";
-import { useTerminalQueue } from "../stores/useTerminalQueue";
+import type { Line } from "../stores/useTerminal";
+import { useTerminalStore } from "../stores/useTerminal";
 import TerminalLine from "../components/TerminalLine";
 
 export default function Terminal() {
@@ -20,12 +20,12 @@ export default function Terminal() {
     // SUBSCRIPTIONS (no re-renders of Terminal)
     // ---------------------------------------
     useEffect(() => {
-        const unsubQueue = useTerminalQueue.subscribe(
+        const unsubQueue = useTerminalStore.subscribe(
             (s) => s.queue,
             (val) => setQueue(val)
         );
 
-        const unsubProcessing = useTerminalQueue.subscribe(
+        const unsubProcessing = useTerminalStore.subscribe(
             (s) => s.isProcessing,
             (val) => setIsProcessing(val)
         );
@@ -37,8 +37,8 @@ export default function Terminal() {
     }, []);
 
     // Store actions (safe to select directly, no rerender risk)
-    const dequeue = useTerminalQueue.getState().dequeue;
-    const setProcessingAction = useTerminalQueue.getState().setProcessing;
+    const dequeue = useTerminalStore.getState().dequeue;
+    const setProcessingAction = useTerminalStore.getState().setProcessing;
 
     // ---------------------------------------
     // PROCESS QUEUE

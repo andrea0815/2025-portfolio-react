@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { useTerminalQueue } from "../stores/useTerminalQueue";
+import { useTerminalStore } from "../stores/useTerminal";
 import textData from "../texts.json";
 import { usePageTransition } from "../stores/usePageTransition";
 import { useNavigate } from "react-router-dom";
-import ScrambleText from "../components/base/scrambleText";
+import { useContentful } from "../stores/useContentful";
+import ScrambleText from "../components/base/ScrambleText";
 
 function ProjectPage() {
 
@@ -15,9 +16,11 @@ function ProjectPage() {
     completeTransition,
     targetRoute,
   } = usePageTransition();
+  const projects = useContentful((s) => s.projects);
 
-  const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
-  const clearTerminalActives = useTerminalQueue((s) => s.clearActives);
+  const enqueueLine = useTerminalStore((s) => s.enqueueLine);
+  const clearTerminalActives = useTerminalStore((s) => s.clearActives);
+  const clearQueue = useTerminalStore((s) => s.clearQueue);
 
   const loadText: string = textData.loaded[0];
   const exitText: string = textData.exit[0];
@@ -26,7 +29,19 @@ function ProjectPage() {
     enqueueLine("");
     enqueueLine(loadText, "projects");
 
+
+    if (projects) {
+      clearTerminalActives();
+      enqueueLine(">> load projects");
+      enqueueLine("");
+
+      for (const project of projects) {
+        enqueueLine(project.title);
+      }
+    }
+
     return () => {
+      clearQueue();
       enqueueLine("");
       enqueueLine(exitText, "projects");
       clearTerminalActives();

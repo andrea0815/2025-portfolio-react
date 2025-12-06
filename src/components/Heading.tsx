@@ -1,7 +1,9 @@
 import { useLocation } from "react-router-dom";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, use } from "react";
 import { useScramble } from "use-scramble";
-import { useTerminalQueue } from "../stores/useTerminalQueue";
+import { useTerminalStore } from "../stores/useTerminal";
+import { useTopicStore } from "../stores/useTopic";
+import { useContentful } from "../stores/useContentful";
 import textData from "../texts.json";
 // import { ScrambleTextPlugin } from "gsap/all";
 import { useGSAP } from "@gsap/react";
@@ -9,57 +11,82 @@ import gsap from "gsap";
 
 
 function Heading() {
+  // stores
+  const enqueueLine = useTerminalStore((s) => s.enqueueLine);
+  const clearActives = useTerminalStore((s) => s.clearActives);
+  const setCurrentTopic = useTopicStore((s) => s.setCurrentTopic);
+
+  // navigation logic
   const location = useLocation();
   const isLanding = location.pathname === "/";
   const isProjects = location.pathname === "/projects";
   const isAbout = location.pathname === "/about";
+
+  const currentTopic = useTopicStore((s) => s.currentTopic);
+
+  // Array Lists
+  const topics = useContentful((s) => s.topics);
+  const landingTexts = topics?.map((t) => t.name) || [];
   const aboutTexts = textData.aboutTexts;
-  const landingTexts = textData.sections;
 
-  const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
-  const clearActives = useTerminalQueue((s) => s.clearActives);
-
-  const [textList, setTextList] = useState<string[]>(isLanding ? landingTexts : aboutTexts);
+  // states
+  const [hasMounted, setHasMounted] = useState(false);
+  const [currentTextList, setCurrentTextList] = useState<string[]>(isLanding ? landingTexts : aboutTexts);
   const [textIndex, setTextIndex] = useState<number>(0);
-  const [text, setText] = useState<string>("");
 
+  // naviagtion logic
   useEffect(() => {
     if (isLanding) {
-      setTextList(landingTexts)
-    }  else if (isAbout) {
-      setTextList(aboutTexts)
+      setCurrentTextList(landingTexts)
+    } else if (isAbout) {
+      setCurrentTextList(aboutTexts)
     }
     setTextIndex(0);
   }, [isLanding, isProjects]);
 
+  // animation and scramble logic
   const containerRef = useRef<HTMLHeadingElement | null>(null);
-
   const { ref: scrambleRef, replay } = useScramble({
-    text: textList[textIndex],
+    text: currentTextList[textIndex],
     scramble: 4,
     speed: 0.5,
     ignore: [" "],
     playOnMount: false,
-    overflow: false,
+    overflow: true,
   });
 
-  useGSAP(() => {
-    const tl = gsap.timeline();
 
-    tl.from(".heading", {
-      ease: "power1.inOut",
-      delay: 0.5,
-      duration: 0.5,
-      opacity: 0,
-    })
-    tl.add(() => {
-      replay();
-    }, "+=0.2");
+  useGSAP(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (!isProjects) {
+
+      const tl = gsap.timeline();
+
+      tl.from(el, {
+        ease: "power1.inOut",
+        delay: 0.5,
+        duration: 0.6,
+        opacity: 0,
+      })
+      tl.add(() => {
+        replay();
+      }, "+=0.2");
+
+    } else {
+      el.style.opacity = "0";
+    }
+  }, []);
+
+  useEffect(() => {
+    setHasMounted(true);
   }, []);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    if (!hasMounted) return;
 
     if (isProjects) {
       // fade out
@@ -70,6 +97,8 @@ function Heading() {
         pointerEvents: "none"
       });
     } else {
+
+
       // fade in
       gsap.to(el, {
         opacity: 1,
@@ -80,19 +109,32 @@ function Heading() {
     }
   }, [isProjects]);
 
+
   const handleClick = useCallback(() => {
     if (!isProjects) {
 
       clearActives();
 
-      const newIndex = (textIndex + 1) % textList.length;
+      const newIndex = (textIndex + 1) % currentTextList.length;
       setTextIndex(newIndex);
+
+      // if current section is landing, update the new topic
+      if (isLanding) {
+        setCurrentTopic(topics[newIndex]);
+      }
 
       replay();
 
-      enqueueLine(textData.greeting[0], textList[newIndex]);
+      enqueueLine(textData.greeting[0], currentTextList[newIndex]);
     }
-  }, [textIndex, textList]);
+  }, [textIndex, currentTextList]);
+
+  useEffect(() => {
+  if (!isLanding || !currentTopic) return;
+
+  const newIndex = landingTexts.findIndex(t => t === currentTopic.name);
+  if (newIndex !== -1) setTextIndex(newIndex);
+}, [currentTopic, isLanding, landingTexts]);
 
 
   return (
@@ -100,11 +142,13 @@ function Heading() {
       <h1
         ref={containerRef}
         onClick={handleClick}
-        className='heading hoverEl text-heading font-serif text-[7vw] text-center  pointer-events-auto'
+        className='heading hoverEl text-heading font-serif text-[7vw] text-center pointer-events-auto'
       >&#123; <span
         ref={scrambleRef}
         className="heading__text text-inherit font-[inherit] [font-size:inherit]">
-          {textList[textIndex]}
+          {isLanding
+            ? currentTopic?.name || ""
+            : currentTextList[textIndex]}
         </span> &#125;
       </h1>
     </div>

@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-
 export type Line = {
   id: number;
   text: string;
@@ -23,12 +22,12 @@ type TerminalQueueStore = {
   ) => void;
   dequeue: () => void;
   clearActives: () => void;
+  clearQueue: () => void;
 };
 
-export const useTerminalQueue = create(
+export const useTerminalStore = create(
   subscribeWithSelector<TerminalQueueStore>((set, get) => ({
     queue: [],
-    actives: [],
     lineCounter: 0,
     isProcessing: false,
     clearActiveSignal: 0,
@@ -38,16 +37,21 @@ export const useTerminalQueue = create(
         clearActiveSignal: state.clearActiveSignal + 1
       })),
 
+    clearQueue: () =>
+      set(() => ({
+        queue: [],
+      })),
+
     setProcessing: (value) => set(() => ({ isProcessing: value })),
 
 
     enqueueLine: (text, input = null) => {
-      const nextId = get().lineCounter + 1;      
-      
+      const nextId = get().lineCounter + 1;
+
       const resolved = text.includes("BLANK") && input
-      ? text.replace("BLANK", input)
-      : text;
-      
+        ? text.replace("BLANK", input)
+        : text;
+
       const line: Line = {
         id: nextId,
         text: resolved,

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useTerminalQueue } from "../stores/useTerminalQueue";
+import { useTerminalStore } from "../stores/useTerminal";
 import textData from "../texts.json";
 import { NavLink } from "react-router-dom";
 import { usePageTransition } from "../stores/usePageTransition";
@@ -19,9 +19,10 @@ function LandingPage() {
     targetRoute,
   } = usePageTransition();
 
-  const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
-  const enqueueMultiple = useTerminalQueue((s) => s.enqueueMultiple);
-  const clearTerminalActives = useTerminalQueue((s) => s.clearActives);
+  const enqueueLine = useTerminalStore((s) => s.enqueueLine);
+  const enqueueMultiple = useTerminalStore((s) => s.enqueueMultiple);
+  const clearTerminalActives = useTerminalStore((s) => s.clearActives);
+  const clearQueue = useTerminalStore((s) => s.clearQueue);
   const onPageLoadText: string[] = textData.onPageLoad;
   const loadText: string = textData.loaded[0];
   const exitText: string = textData.exit[0]
@@ -44,6 +45,7 @@ function LandingPage() {
     enqueueLine(greetingText, "creative developer");
 
     return () => {
+      clearQueue();
       enqueueLine("");
       enqueueLine(exitText, "landing");
       clearTerminalActives();

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useMainStore } from '../../stores/mainStore';
 import ThemeLightIcon from '../icons/ThemeLightIcon';
 import ThemeDarkIcon from '../icons/ThemeDarkIcon';
-import { useTerminalQueue } from "../../stores/useTerminalQueue";
+import { useTerminalStore } from "../../stores/useTerminal";
 import textData from "../../texts.json";
 
 function ThemeBtn() {
@@ -10,8 +10,8 @@ function ThemeBtn() {
   const changeThemeText: string = textData.theme[0]
 
   const toggleDarkMode = useMainStore((s) => s.toggleDarkMode);
-  const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
-  const clearActives = useTerminalQueue((s) => s.clearActives);
+  const enqueueLine = useTerminalStore((s) => s.enqueueLine);
+  const clearActives = useTerminalStore((s) => s.clearActives);
 
   function handleClick(): void {
     clearActives();
@@ -23,7 +23,7 @@ function ThemeBtn() {
   return (
     <div
       onClick={handleClick}
-      className=" translate-y-1/4"
+      className="hoverEl translate-y-1/4"
     >
       {darkMode ? <ThemeLightIcon /> : <ThemeDarkIcon />}
     </div>

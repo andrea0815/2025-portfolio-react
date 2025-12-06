@@ -2,10 +2,10 @@ import { create } from "zustand";
 import { client } from "../contentfulClient";
 
 interface ContenfulStore {
-    projects: Project[] | null,
-    tags: Tag[] | null,
-    topics: Topic[] | null,
-    tools: Tool[] | null,
+    projects: Project[],
+    tags: Tag[],
+    topics: Topic[],
+    tools: Tool[],
     loading: boolean,
     error: any,
 
@@ -28,6 +28,7 @@ export interface Project {
 
 export interface Topic {
     name: string;
+    tags: Tag[];
 }
 
 
@@ -51,12 +52,11 @@ export const useContentful = create<ContenfulStore>((set) => ({
     fetchAll: async () => {
         try {
             const response = await client.getEntries({
-                "sys.contentType.sys.id[in]": "project,topic,tag,tool",
+                "sys.contentType.sys.id[in]": "project,topics,tags,tool",
             } as Record<string, any>);
             const allItems = response.items;
 
             console.log(allItems);
-
 
             // Split by content type
             const projects = allItems
@@ -68,22 +68,28 @@ export const useContentful = create<ContenfulStore>((set) => ({
                     date: i.fields.date as string,
                     thumbnail: i.fields.thumbnail,
                     topics: i.fields.topics,
-                    tags: i.fields.tags,
-                    tools: i.fields.tools,
-                    gallery: i.fields.gallery,
+                    tags: Array.isArray(i.fields.tags) ? i.fields.tags : [],
+                    tools: Array.isArray(i.fields.tools) ? i.fields.tools : [],
+                    gallery: Array.isArray(i.fields.gallery) ? i.fields.gallery : [],
                     linkText: i.fields.linkText as string | undefined,
                     link: i.fields.link as string | undefined,
                 }));
+
             const topics = allItems
-                .filter((i) => i.sys.contentType.sys.id === "topic")
+                .filter((i) => i.sys.contentType.sys.id === "topics")
                 .map((i) => ({
                     name: i.fields.name as string,
+                    tags: Array.isArray(i.fields.tags)
+                        ? i.fields.tags.map((tag: any) => ({
+                            name: tag.fields.name as string,
+                        }))
+                        : []
                 }));
 
             const tags = allItems
-                .filter((i) => i.sys.contentType.sys.id === "tag")
+                .filter((i) => i.sys.contentType.sys.id === "tags")
                 .map((i) => ({
-                    name: i.fields.name as string,
+                    name: i.fields.name as string
                 }));
 
             const tools = allItems
@@ -92,11 +98,10 @@ export const useContentful = create<ContenfulStore>((set) => ({
                     name: i.fields.name as string
                 }));
 
-            console.log(projects);
-            console.log(topics);
-            console.log(tags);
-            console.log(tools);
-
+            // console.log(projects);
+            // console.log(tools);
+            // console.log(topics);
+            // console.log(tags);
 
             set({
                 projects,

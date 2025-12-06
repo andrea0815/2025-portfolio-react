@@ -10,8 +10,8 @@ function ScrambleText({ text, isStatic = false }: ScrambleTextProps) {
 
     const { ref: textEl, replay } = useScramble({
         text: text,
-        scramble: 4,
-        speed: 1,
+        scramble: 3,
+        speed: 0.5,
         ignore: [" "],
         playOnMount: false,
         overflow: true,
@@ -33,7 +33,7 @@ function ScrambleText({ text, isStatic = false }: ScrambleTextProps) {
             ref={textEl}
             onMouseEnter={handleClick}
             onClick={handleClick}
-            className="text-inherit font-[inherit] [font-size:inherit] hover:text-text-highlight"
+            className="hoverEl text-inherit font-[inherit] [font-size:inherit] hover:text-text-highlight"
         >
             {text}
         </p>

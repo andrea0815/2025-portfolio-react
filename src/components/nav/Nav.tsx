@@ -2,8 +2,9 @@ import { NavLink, useLocation } from "react-router-dom";
 import { usePageTransition } from "../../stores/usePageTransition";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
-import ScrambleText from "../base/scrambleText";
+
 import NavSide from "./NavSide";
+import ScrambleText from "../base/ScrambleText";
 
 function Nav() {
     const location = useLocation();
@@ -53,7 +54,7 @@ function Nav() {
     return (
         <nav
             ref={navRef}
-            className="lg:pt-6 pt-4 [grid-area:main] hoverEl self-start z-50 flex flex-row flex-wrap items-center opacity-0"
+            className="lg:pt-6 pt-4 [grid-area:main] self-start z-50 flex flex-row flex-wrap items-center opacity-0"
         >
             <div className=" hoverEl flex flex-row px-2 py-2 bg-grayish gap-2 w-fit rounded-4xl">
 

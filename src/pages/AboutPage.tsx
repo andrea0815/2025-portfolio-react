@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useTerminalQueue } from "../stores/useTerminalQueue";
+import { useTerminalStore } from "../stores/useTerminal";
 import textData from "../texts.json";
 import { useScramble } from "use-scramble";
 import { usePageTransition } from "../stores/usePageTransition";
@@ -16,8 +16,9 @@ function AboutPage() {
     targetRoute,
   } = usePageTransition();
 
-  const enqueueLine = useTerminalQueue(s => s.enqueueLine);
-  const clearTerminalActives = useTerminalQueue(s => s.clearActives);
+  const enqueueLine = useTerminalStore(s => s.enqueueLine);
+  const clearTerminalActives = useTerminalStore(s => s.clearActives);
+  const clearQueue = useTerminalStore((s) => s.clearQueue);
 
   const aboutText =
     "i come from Vienna and after my graphic design education i did a degree in Creative Computing to enhance my coding skills. mostly, i design and develop websites or apps, but i also love to illustrate or do photography. simply put – i love to learn new skills and tools.";
@@ -48,10 +49,14 @@ function AboutPage() {
   useEffect(() => {
     enqueueLine("");
     enqueueLine(textData.loaded[0], "about");
+    enqueueLine("");
+    enqueueLine(aboutText);
+    enqueueLine("");
 
     replayScramble();
 
     return () => {
+      clearQueue();
       enqueueLine("");
       enqueueLine(textData.exit[0], "about");
       clearTerminalActives();
@@ -81,10 +86,7 @@ function AboutPage() {
 
   return (
     <div className="w-full">
-      <p
-        ref={scrambleRef}
-        className='leading-[1.8] [font-variation-settings:"MONO"_100]'
-      ></p>
+      <img src="" alt="" />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useTerminalQueue } from "../stores/useTerminalQueue";
+import { useTerminalStore } from "../stores/useTerminal";
 import textData from "../texts.json";
 
 import InstagramIcon from './icons/InstagramIcon';
@@ -10,8 +10,8 @@ import MailIcon from './icons/MailIcon';
 
 function SocialList() {
 
-  const enqueueLine = useTerminalQueue((s) => s.enqueueLine);
-  const clearActives = useTerminalQueue((s) => s.clearActives);
+  const enqueueLine = useTerminalStore((s) => s.enqueueLine);
+  const clearActives = useTerminalStore((s) => s.clearActives);
   const linkText: string = textData.link[0]
 
   function handleClick(link: string): void {

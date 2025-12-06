@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { memo } from "react";
 import { useScramble } from "use-scramble";
-import { useTerminalQueue } from "../stores/useTerminalQueue";
+import { useTerminalStore } from "../stores/useTerminal";
 import textData from "../texts.json";
 
 type LineProps = {
@@ -22,8 +22,8 @@ function TerminalLine({
 
     const { ref: outputRef, replay } = useScramble({
         text,
-        scramble: 4,
-        speed: 1,
+        scramble: 3,
+        speed: 2,
         overdrive: false,
 
         onAnimationEnd() {
@@ -56,7 +56,7 @@ function TerminalLine({
     }, []);
 
     useEffect(() => {
-        const unsub = useTerminalQueue.subscribe(
+        const unsub = useTerminalStore.subscribe(
             s => s.clearActiveSignal,
             () => {
                 setIsActive(false);
