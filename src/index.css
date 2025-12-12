@@ -6,6 +6,7 @@
   --color-*: initial;
   --color-yellow: #DAD53C;
   --color-khaki: #665c11;
+  --color-khaki-50: #665c1188;
   --color-white: #FFFFFF;
   --color-white-off: #BBBBBB;
   --color-black: #111111;
@@ -111,11 +112,12 @@
   .dark {
     --color-yellow: #FFEE71;
     --color-khaki: #665C11;
+    --color-khaki-50: #665C1188;
     --color-text: var(--color-gray-100);
     --color-text-highlight: var(--color-white);
     --color-background: var(--color-black);
     --color-primary: var(--color-yellow);
-    --color-secondary: var(--color-khaki);
+    --color-secondary: var(--color-khaki-50);
     --color-grayish: var(--color-gray-200-20);
     --color-highlight: var(--color-white);
     --color-heading: var(--color-primary);

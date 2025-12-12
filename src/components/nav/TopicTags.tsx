@@ -1,4 +1,4 @@
-import { useMemo, Fragment, useState } from "react";
+import { useMemo, Fragment, useState, useEffect } from "react";
 
 import { useContentful } from "../../stores/useContentful";
 import { useTopicStore } from "../../stores/useTopic";
@@ -9,6 +9,8 @@ import TopicTag from "./TopicTag";
 import type { Topic } from "../../stores/useContentful";
 
 function TopicTags() {
+
+    // stores
     const topics = useContentful((s) => s.topics);
     const currentTopic = useTopicStore((s) => s.currentTopic);
     const setCurrentTopic = useTopicStore((s) => s.setCurrentTopic);
@@ -68,7 +70,7 @@ function TopicTags() {
                         isCurrent={topic.name === currentTopic?.name}
                         onSelect={() => handleClick(topic)}
                     />
-                    {i !== visibleTopics.length - 1 && <span>,</span>}
+                    {i !== visibleTopics.length - 1 && <span className="topicEl">,</span>}
                 </Fragment>
             ))}
         </>

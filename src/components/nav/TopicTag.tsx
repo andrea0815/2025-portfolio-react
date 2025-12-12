@@ -13,7 +13,7 @@ function TopicTag({ text, isCurrent, onSelect }: TopicTagProps) {
   }
 
   return (
-    <a onClick={handleClick} className='ml-2 hoverEl'>
+    <a onClick={handleClick} className='topicEl ml-2 hoverEl'>
       <ScrambleText text={text} />
     </a>
   );

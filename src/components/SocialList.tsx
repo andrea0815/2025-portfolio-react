@@ -12,9 +12,11 @@ function SocialList() {
 
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const clearActives = useTerminalStore((s) => s.clearActives);
+  const clearQueue = useTerminalStore((s) => s.clearQueue);
   const linkText: string = textData.link[0]
 
   function handleClick(link: string): void {
+    clearQueue();
     clearActives();
     enqueueLine("");
     enqueueLine(linkText, link);
@@ -22,6 +24,7 @@ function SocialList() {
   }
 
   function handleMailClick(link: string): void {
+    clearQueue();
     clearActives();
     enqueueLine("");
     enqueueLine("you can contact me via mail:");

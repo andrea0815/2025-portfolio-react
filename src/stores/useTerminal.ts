@@ -40,6 +40,7 @@ export const useTerminalStore = create(
     clearQueue: () =>
       set(() => ({
         queue: [],
+        // isProcessing: false,  // <-- THIS IS THE FIX
       })),
 
     setProcessing: (value) => set(() => ({ isProcessing: value })),

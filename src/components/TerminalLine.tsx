@@ -23,7 +23,7 @@ function TerminalLine({
     const { ref: outputRef, replay } = useScramble({
         text,
         scramble: 3,
-        speed: 2,
+        speed: 1,
         overdrive: false,
 
         onAnimationEnd() {

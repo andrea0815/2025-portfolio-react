@@ -11,7 +11,7 @@ function Nav() {
     const isLanding = location.pathname === "/";
     const requestTransition = usePageTransition((s) => s.requestTransition);
 
-    const navRef = useRef<HTMLDivElement | null>(null);
+    const navRef = useRef<HTMLElement>(null);
 
     const linkClass = ({ isActive }: { isActive: boolean }) =>
         isActive
@@ -63,7 +63,7 @@ function Nav() {
                     className={linkClass}
                     onClick={(e) => handleClick(e, "/projects")}
                 >
-                    &lt;<ScrambleText text="projects"/>&gt;
+                    &lt;<ScrambleText text="projects" />&gt;
                 </NavLink>
 
                 <NavLink
@@ -71,12 +71,12 @@ function Nav() {
                     className={linkClass}
                     onClick={(e) => handleClick(e, "/about")}
                 >
-                    &lt;<ScrambleText text="about"/>&gt;
+                    &lt;<ScrambleText text="about" />&gt;
                 </NavLink>
 
             </div>
 
-            <NavSide />
+            <NavSide parentRef={navRef} />
         </nav>
     );
 }

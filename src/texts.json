@@ -31,13 +31,26 @@
         "one-month internship at Vice Virtue",
         "as graphic designer",
         "",
+        "11-2019 – 01-2022",
+        "Architekturbüro Abendroth Architekten",
+        "as graphic designer, social media manager",
+        "",
+        "02-2022 – 08-2024",
+        "R12 Spannbauer GmbH – media agency",
+        "as graphic designer",
+        "",
+        "09-2024 – 08-2024",
+        "Left Studio - digital ageny",
+        "as full-stack developer"
+    ],
+    "education": [
         "2016-2021",
-        "Graphic and Communication Design education at the",
-        "Higher Federal Institution for Graphic Education and Research",
+        "Graphic and Communication Design",
+        "at the Higher Federal Institution for Graphic Education and Research",
         "",
         "2021-2025",
-        "Bachelor degree “Creative Computing”",
-        "at University of Applied Sciences St. Pölten"
+        "Creative Computing (BSc)",
+        "at the University of Applied Sciences St. Pölten"
     ],
     "tools": [
         "unity",
@@ -104,10 +117,39 @@
         "writer",
         "photographer"
     ],
-    "aboutTexts": [
-        "hi",
-        "hello",
-        "heyoo",
-        "heeey"
+    "aboutHeading": [
+        {
+            "heading": "hi",
+            "text": "BLANK, i am based in vienna."
+        },
+        {
+            "heading": "hello",
+            "text": "BLANK, i dont drink coffee, but i love hot chocolate."
+        },
+        {
+            "heading": "heeey",
+            "text": "BLANK, dancing is my passion besides creative stuff."
+        },
+        {
+            "heading": "heyoo",
+            "text": "BLANK, dont hesitate to reach out!"
+        }
+    ],
+    "aboutMe": [
+        "i am a creative coder based in vienna. mostly, i design and develop websites or apps, but i also love to illustrate or do photography. simply put – i love to learn new skills and tools."
+    ],
+    "aboutTags": [
+        {
+            "name": "me"
+        },
+        {
+            "name": "education"
+        },
+        {
+            "name": "experience"
+        },
+        {
+            "name": "tools"
+        }
     ]
 }

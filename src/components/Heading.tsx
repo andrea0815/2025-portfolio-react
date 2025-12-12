@@ -27,11 +27,11 @@ function Heading() {
   // Array Lists
   const topics = useContentful((s) => s.topics);
   const landingTexts = topics?.map((t) => t.name) || [];
-  const aboutTexts = textData.aboutTexts;
+  const aboutHeading = textData.aboutHeading;
 
   // states
   const [hasMounted, setHasMounted] = useState(false);
-  const [currentTextList, setCurrentTextList] = useState<string[]>(isLanding ? landingTexts : aboutTexts);
+  const [currentTextList, setCurrentTextList] = useState<string[]>(isLanding ? landingTexts : aboutHeading.map(t => t.heading));
   const [textIndex, setTextIndex] = useState<number>(0);
 
   // naviagtion logic
@@ -39,7 +39,7 @@ function Heading() {
     if (isLanding) {
       setCurrentTextList(landingTexts)
     } else if (isAbout) {
-      setCurrentTextList(aboutTexts)
+      setCurrentTextList(aboutHeading.map(t => t.heading))
     }
     setTextIndex(0);
   }, [isLanding, isProjects]);
@@ -109,6 +109,10 @@ function Heading() {
     }
   }, [isProjects]);
 
+  useEffect(() => {
+    if (!isAbout) return;
+    enqueueLine(aboutHeading[textIndex].text, currentTextList[0]);
+  }, [isAbout])
 
   const handleClick = useCallback(() => {
     if (!isProjects) {
@@ -124,17 +128,16 @@ function Heading() {
       }
 
       replay();
-
-      enqueueLine(textData.greeting[0], currentTextList[newIndex]);
+      isAbout ? enqueueLine(aboutHeading[newIndex].text, currentTextList[newIndex]) : enqueueLine(textData.greeting[0], currentTextList[newIndex]);
     }
   }, [textIndex, currentTextList]);
 
   useEffect(() => {
-  if (!isLanding || !currentTopic) return;
+    if (!isLanding || !currentTopic) return;
 
-  const newIndex = landingTexts.findIndex(t => t === currentTopic.name);
-  if (newIndex !== -1) setTextIndex(newIndex);
-}, [currentTopic, isLanding, landingTexts]);
+    const newIndex = landingTexts.findIndex(t => t === currentTopic.name);
+    if (newIndex !== -1) setTextIndex(newIndex);
+  }, [currentTopic, isLanding, landingTexts]);
 
 
   return (

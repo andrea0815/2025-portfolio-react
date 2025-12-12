@@ -1,10 +1,13 @@
 import { useEffect } from "react";
-import { useTerminalStore } from "../stores/useTerminal";
-import textData from "../texts.json";
-import { usePageTransition } from "../stores/usePageTransition";
 import { useNavigate } from "react-router-dom";
-import { useContentful } from "../stores/useContentful";
 import ScrambleText from "../components/base/ScrambleText";
+
+import { useContentful } from "../stores/useContentful";
+import { useTerminalStore } from "../stores/useTerminal";
+import { usePageTransition } from "../stores/usePageTransition";
+import { useTopicStore } from "../stores/useTopic";
+
+import textData from "../texts.json";
 
 function ProjectPage() {
 
@@ -21,6 +24,8 @@ function ProjectPage() {
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
   const clearQueue = useTerminalStore((s) => s.clearQueue);
+  const clearAllFilters = useTopicStore((s) => s.clearAllFilters);
+
 
   const loadText: string = textData.loaded[0];
   const exitText: string = textData.exit[0];
@@ -32,7 +37,6 @@ function ProjectPage() {
 
     if (projects) {
       clearTerminalActives();
-      enqueueLine(">> load projects");
       enqueueLine("");
 
       for (const project of projects) {
@@ -57,6 +61,9 @@ function ProjectPage() {
 
   useEffect(() => {
     if (!isTransitioning && targetRoute) {
+
+      clearAllFilters();
+
       navigate(targetRoute);
     }
   }, [isTransitioning]);
