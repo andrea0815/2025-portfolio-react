@@ -35,14 +35,14 @@ function ProjectPage() {
     enqueueLine(loadText, "projects");
 
 
-    if (projects) {
-      clearTerminalActives();
-      enqueueLine("");
+    // if (projects) {
+    //   clearTerminalActives();
+    //   enqueueLine("");
 
-      for (const project of projects) {
-        enqueueLine(project.title);
-      }
-    }
+    //   for (const project of projects) {
+    //     enqueueLine(project.title);
+    //   }
+    // }
 
     return () => {
       clearQueue();
@@ -61,18 +61,14 @@ function ProjectPage() {
 
   useEffect(() => {
     if (!isTransitioning && targetRoute) {
-
       clearAllFilters();
-
       navigate(targetRoute);
     }
   }, [isTransitioning]);
 
   return (
-    <div>
-      <ScrambleText text="projects page"></ScrambleText>
-      Project Page
-    </div>
+    <>
+    </>
   );
 }
 

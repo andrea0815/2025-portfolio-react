@@ -23,7 +23,7 @@ function ThemeBtn() {
   return (
     <div
       onClick={handleClick}
-      className="hoverEl translate-y-1/4"
+      className="hoverEl translate-y-1/4 z-50"
     >
       {darkMode ? <ThemeLightIcon /> : <ThemeDarkIcon />}
     </div>

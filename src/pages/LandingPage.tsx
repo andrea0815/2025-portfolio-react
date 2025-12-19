@@ -1,24 +1,19 @@
 import { useEffect, useRef } from "react";
+
 import { useTerminalStore } from "../stores/useTerminal";
-import textData from "../texts.json";
-import { NavLink } from "react-router-dom";
 import { usePageTransition } from "../stores/usePageTransition";
 import { useNavigate } from "react-router-dom";
 
-function LandingPage() {
+import textData from "../texts.json";
 
-  const firstLoad = useRef(true);
+function LandingPage() {
 
   const navigate = useNavigate();
   const {
     isTransitioning,
-    registerAnimation,
-    finishAnimation,
     completeTransition,
-    requestTransition,
     targetRoute,
   } = usePageTransition();
-
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const enqueueMultiple = useTerminalStore((s) => s.enqueueMultiple);
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
@@ -28,12 +23,12 @@ function LandingPage() {
   const exitText: string = textData.exit[0]
   const greetingText: string = textData.greeting[0]
 
+  const hintIntervalRef = useRef<number | null>(null);
+
   useEffect(() => {
 
     const alreadyLoaded = sessionStorage.getItem("pageLoaded");
 
-    console.log(() => {alreadyLoaded ? true : false});
-    
     if (!alreadyLoaded) {
       sessionStorage.setItem("pageLoaded", "true");
       enqueueMultiple(onPageLoadText);
@@ -44,23 +39,56 @@ function LandingPage() {
     enqueueLine("");
     enqueueLine(greetingText, "creative developer");
 
+    startHintInterval();
+
+
     return () => {
       clearQueue();
       enqueueLine("");
       enqueueLine(exitText, "landing");
       clearTerminalActives();
+      stopHintInterval();
     };
   }, [])
 
-  function handleClick(
-    e: React.MouseEvent<HTMLAnchorElement>,
-    to: string
-  ) {
-    e.preventDefault();
-    if (location.pathname === to) return;
-    // replayScramble();
-    requestTransition(to);
-  }
+  const startHintInterval = () => {
+    if (hintIntervalRef.current !== null) return; // prevent stacking
+
+    print();
+
+    hintIntervalRef.current = window.setInterval(() => {
+      print();
+    }, 10000);
+
+    function print() {
+      clearTerminalActives();
+      enqueueLine("");
+      enqueueLine(">> Tip: Hold to load projects");
+    }
+  };
+
+  const stopHintInterval = () => {
+    if (hintIntervalRef.current === null) return;
+
+    clearInterval(hintIntervalRef.current);
+    hintIntervalRef.current = null;
+  };
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        stopHintInterval();
+      } else {
+        startHintInterval();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   // PAGE TRANSITION
 
@@ -76,11 +104,7 @@ function LandingPage() {
 
   return (
     <div>
-      Landing Page
-      <NavLink
-        to="/projects"
-        onClick={(e) => handleClick(e, "/projects")}
-      >&lt;projects&gt;</NavLink>
+
     </div>
   );
 }

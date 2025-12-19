@@ -32,7 +32,7 @@ function SocialList() {
   }
 
   return (
-    <div className='flex flex-col gap-5'>
+    <div className='flex flex-col gap-5 z-50'>
 
       <div onClick={() => { handleMailClick("mail@andreawindisch.com") }} className="hoverEl translate-y-1/4">
         <MailIcon />

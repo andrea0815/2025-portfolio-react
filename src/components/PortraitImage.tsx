@@ -88,12 +88,12 @@ function PortraitImage() {
     }, [isTransitioning]);
 
     return (
-        <div className="w-full h-full flex justify-center items-center relative overflow-hidden">
+        <div className="w-full h-full flex justify-center items-center relative overflow-hidden select-none">
             <img
                 ref={portraitRef}
-                src="./images/portrait.jpg"
+                src="./images/portrait2.jpg"
                 alt="portrait"
-                className="w-[70%] relative will-change-transform"
+                className="w-[50%] relative will-change-transform"
             />
         </div>
     );

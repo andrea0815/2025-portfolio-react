@@ -1,13 +1,14 @@
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
-import { useState, useRef, useEffect, useCallback, use } from "react";
 import { useScramble } from "use-scramble";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+
 import { useTerminalStore } from "../stores/useTerminal";
 import { useTopicStore } from "../stores/useTopic";
 import { useContentful } from "../stores/useContentful";
+
 import textData from "../texts.json";
-// import { ScrambleTextPlugin } from "gsap/all";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 
 
 function Heading() {
@@ -67,7 +68,7 @@ function Heading() {
       tl.from(el, {
         ease: "power1.inOut",
         delay: 0.5,
-        duration: 0.6,
+        duration: 1,
         opacity: 0,
       })
       tl.add(() => {
@@ -92,17 +93,15 @@ function Heading() {
       // fade out
       gsap.to(el, {
         opacity: 0,
-        duration: 0.6,
+        duration: 1,
         ease: "power2.out",
         pointerEvents: "none"
       });
     } else {
-
-
       // fade in
       gsap.to(el, {
         opacity: 1,
-        duration: 0.6,
+        duration: 1,
         ease: "power2.out",
         pointerEvents: "auto"
       });

@@ -1,6 +1,6 @@
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
-import { ScrambleTextPlugin, SplitText } from "gsap/all";
+import { ScrambleTextPlugin, SplitText, ScrollTrigger } from "gsap/all";
 // @ts-ignore
 import gsap from 'gsap';
 
@@ -16,7 +16,7 @@ import AboutPage from "./pages/AboutPage";
 import PageNotFound from "./pages/PageNotFound";
 
 // register GSAP plugins
-gsap.registerPlugin(ScrambleTextPlugin, SplitText);
+gsap.registerPlugin(ScrambleTextPlugin, SplitText, ScrollTrigger);
 
 function App() {
   const fetchAll = useContentful((s) => s.fetchAll);

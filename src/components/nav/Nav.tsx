@@ -1,7 +1,8 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { usePageTransition } from "../../stores/usePageTransition";
-import gsap from "gsap";
 import { useEffect, useRef } from "react";
+import gsap from "gsap";
+
+import { usePageTransition } from "../../stores/usePageTransition";
 
 import NavSide from "./NavSide";
 import ScrambleText from "../base/ScrambleText";

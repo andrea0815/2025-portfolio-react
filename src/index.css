@@ -25,7 +25,7 @@
   --color-heading: var(--color-gray-200);
   --color-cursor: var(--color-white);
 
-  --text-base: 14px;
+  --text-base: 13px;
 
   --spacing-*: initial;
   --spacing-1: 2px;
@@ -109,6 +109,8 @@
     color: var(--color-gray-100);
   }
 
+
+
   .dark {
     --color-yellow: #FFEE71;
     --color-khaki: #665C11;
@@ -124,7 +126,19 @@
     --color-cursor: var(--color-white);
   }
 
-  nav>*{
+  .no-scrollbar {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari */
+  }
+
+  nav>* {
     height: 43px;
     display: flex;
     align-items: center;

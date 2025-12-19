@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { usePageTransition } from "../stores/usePageTransition";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -11,13 +11,10 @@ import Heading from "../components/Heading";
 import SocialList from "../components/SocialList";
 import Terminal from "../components/Terminal";
 import CustomCursor from "../components/CustomCursor";
+import Gallery from "../components/gallery/Gallery";
 
 
 function MainLayout() {
-
-    const location = useLocation();
-    const isHome = location.pathname === "/";
-    const isProjects = location.pathname === "/projects";
 
     const navigate = useNavigate();
     const setNavigateFn = usePageTransition((s) => s.setNavigateFn);
@@ -56,6 +53,7 @@ function MainLayout() {
 
                 <Nav />
                 <Heading />
+                <Gallery />
 
                 <div className="[grid-area:social] flex flex-col items-center lg:py-6 py-4">
                     <SocialList />

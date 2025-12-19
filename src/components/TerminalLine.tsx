@@ -70,7 +70,7 @@ function TerminalLine({
             <span className="static flex-shrink-0">{staticText}</span>
             <span
                 ref={outputRef}
-                className={`output break-all opacity-100 ${isActive ? "active" : ""}`}
+                className={`output opacity-100 ${isActive ? "active" : ""}`}
             ></span>
         </span>
     );

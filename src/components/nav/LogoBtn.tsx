@@ -26,7 +26,7 @@ function ThemeBtn() {
         <Link
             to="/"
             onClick={(e) => handleClick(e, "/")}
-            className="translate-y-1/4">
+            className="translate-y-1/4 z-50">
             <LogoIcon />
         </Link>
     );

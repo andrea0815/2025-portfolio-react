@@ -5,7 +5,7 @@ interface IconProps {
 
 export default function Icon({
   children,
-  size = 25,
+  size = 20,
 }: IconProps) {
   return (
     <div
