@@ -114,7 +114,7 @@
   .dark {
     --color-yellow: #FFEE71;
     --color-khaki: #665C11;
-    --color-khaki-50: #665C1188;
+    --color-khaki-50: #544c0ea1;
     --color-text: var(--color-gray-100);
     --color-text-highlight: var(--color-white);
     --color-background: var(--color-black);

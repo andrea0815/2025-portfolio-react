@@ -1,9 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import gsap from "gsap";
 
 import { useContentful } from "../../stores/useContentful";
 import { useTerminalStore } from "../../stores/useTerminal";
+import { useProjectsStore } from "../../stores/useProjects";
+
 
 import GalleryItem from './GalleryItem';
 
@@ -13,14 +15,19 @@ function Gallery() {
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
   const clearQueue = useTerminalStore((s) => s.clearQueue);
+  const setActiveProject = useProjectsStore((s) => s.setActiveProject);
 
   const location = useLocation();
   const isProjects = location.pathname === "/projects";
 
+  const SCROLL_HEIGHT = projects.length * 100; // in vh
+
   const displayProjects = projects;
   const galleryRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-
+  const centersRef = useRef<number[]>([]);
+  const activeIndexRef = useRef<number>(-1);
+  const idleTimerRef = useRef<number | null>(null);
 
   // animate on path change
   useEffect(() => {
@@ -51,7 +58,7 @@ function Gallery() {
     const scrollEl = scrollRef.current;
     const galleryEl = galleryRef.current;
     if (!scrollEl || !galleryEl) return;
-    
+
 
     const track = galleryEl.querySelector(
       ".flex.flex-row"
@@ -63,75 +70,134 @@ function Gallery() {
 
     if (!track || items.length === 0) return;
 
+    computeCenters(items);
+
+    const xTo = gsap.quickTo(track, "x", { duration: 0.25, ease: "power2.out" });
+
     const onScroll = () => {
-      const scrollTop = scrollEl.scrollTop;
-      const maxScroll =
-        scrollEl.scrollHeight - scrollEl.clientHeight;        
-        
-        // 1️⃣ vertical scroll → 0..1
-        const progress =
-        maxScroll === 0 ? 0 : scrollTop / maxScroll;
-        
-      // 2️⃣ move gallery horizontally
-      const maxX =
-        track.scrollWidth - window.innerWidth;
+      const vh = scrollEl.clientHeight;
+      const raw = scrollEl.scrollTop / vh;
 
-      const x = -maxX * progress;
-      gsap.set(track, { x });
+      const activeIndex = Math.round(raw);
+      // if we entered a new container item
+      checkActiveIndexAndHandleProject(activeIndex);
 
-      // 3️⃣ homogeneous active item effect
-      const viewportCenter = 2 * window.innerWidth / 3;
+      const i0 = Math.floor(raw);
+      const i1 = Math.min(items.length - 1, i0 + 1);
+      const t = raw - i0;
 
+      const heroX = (1 * window.innerWidth) / 2;     // your “max” position
+
+      const centers = centersRef.current;
+      const c0 = centers[Math.max(0, Math.min(items.length - 1, i0))];
+      const c1 = centers[i1];
+
+      // interpolate the target center smoothly
+      const activeCenter = c0 + (c1 - c0) * t;
+
+      let x = heroX - activeCenter;
+
+      // clamp
+      const minX = window.innerWidth - track.scrollWidth;
+      const maxX = 0;
+      x = Math.max(minX, Math.min(maxX, x));
+
+      xTo(x);
+
+      // keep your distance-based emphasis (also smooth)
       items.forEach((item) => {
         const rect = item.getBoundingClientRect();
         const itemCenter = rect.left + rect.width / 2;
 
-        const distance = Math.abs(
-          viewportCenter - itemCenter
-        );
+        const distance = Math.abs(heroX - itemCenter);
+        const maxDistance = 1000;
+        const u = 1 - Math.min(distance / maxDistance, 1);
 
-        // tweak this to control softness
-        const maxDistance = 500;
-
-        const t =
-          1 - Math.min(distance / maxDistance, 1);
-
-        const scale = 0.55 + 0.45 * t;
-        const opacity = 0.15 + 0.85 * t;
-
-        gsap.set(item, { scale, opacity });
+        gsap.set(item, {
+          scale: 0.55 + 0.45 * u,
+          opacity: 0.05 + 0.85 * u,
+        });
       });
     };
 
     // initial state
     onScroll();
 
+    const onScrollResize = () => {
+      computeCenters(items);
+      onScroll();
+    }
+
     scrollEl.addEventListener("scroll", onScroll);
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onScrollResize);
 
     return () => {
       scrollEl.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onScrollResize);
     };
   }, []);
 
-  return (
-    <section ref={scrollRef} className='fixed h-screen w-screen select-none overflow-y-scroll no-scrollbar'>
+  const checkActiveIndexAndHandleProject = (activeIndex: number) => {
+    if (activeIndex !== activeIndexRef.current) {
+      activeIndexRef.current = activeIndex;
 
-      <div ref={galleryRef} className='w-full fixed -z-20 flex top-1/2 -translate-y-1/2 overflow-x-auto overflow-y-hidden items-center  snap-x snap-mandatory scroll-pr-8 no-scrollbar'>
-        <div className='flex flex-row items-end gap-5 flex-nowrap pl-[50vw] pr-8 h-[50dvh]'>
-          <div className='w-[50dvh]'></div>
+      // kill previous idle timer
+      if (idleTimerRef.current) {
+        window.clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = null;
+      }
+
+      // start a new one: if no new item entered for 1s, print
+      idleTimerRef.current = window.setTimeout(() => {
+        if (!displayProjects[activeIndex]) return;
+        
+        const project = displayProjects[activeIndex];
+        printProjectInfo(project);
+        setActiveProject(project);
+
+      }, 1000);
+    }
+  }
+
+  const printProjectInfo = (project: any) => {
+    const title: String = project?.title.toUpperCase() || "untitled";
+    const subtitle: String = project?.subtitle || "undefined";
+
+    clearQueue();
+    clearTerminalActives();
+    enqueueLine("");
+    enqueueLine(`title: ${title.toUpperCase()}`);
+    enqueueLine(`type: ${subtitle.toLowerCase()}`);
+
+  }
+
+
+  const computeCenters = (items: HTMLElement[]) => {
+    centersRef.current = items.map((el) => el.offsetLeft + el.offsetWidth / 2);
+  };
+
+  return (
+    <section ref={scrollRef} className='fixed h-screen w-screen select-none overflow-y-scroll snap-y snap-mandatory  no-scrollbar mix-blend-difference'>
+
+      <div ref={galleryRef} className='w-full fixed -z-20 flex top-1/2 -translate-y-1/2 overflow-x-auto items-center no-scrollbar '>
+        <div className='flex flex-row items-end gap-2 lg:gap-5 flex-nowrap pl-[50vw] pr-8'>
           {displayProjects.map((project, index) => (
             <GalleryItem
               key={index}
               project={project}
             />
           ))}
-          <div className='w-[50dvh]'></div>
+          <div className='w-[80dvw] lg:w-[65dvh]'></div>
         </div>
       </div>
 
-      <div className='scroll-container h-[1000dvh] select-auto text-white'></div>
+      <div
+        className="scroll-container select-auto flex flex-col text-white snap-y snap-mandatory"
+        style={{ height: `${SCROLL_HEIGHT}dvh` }}>
+        {displayProjects.map((projects, index) => (
+          <div key={index} className="h-dvh snap-start"></div>
+        ))}
+      </div>
     </section>
   );
 }
