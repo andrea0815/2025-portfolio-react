@@ -6,6 +6,7 @@ import { useContentful } from "../../stores/useContentful";
 import { useTerminalStore } from "../../stores/useTerminal";
 import { useProjectsStore } from "../../stores/useProjects";
 
+import type { Tag } from "../../stores/useContentful";
 
 import GalleryItem from './GalleryItem';
 
@@ -47,7 +48,7 @@ function Gallery() {
       gsap.to(el, {
         opacity: 1,
         duration: 0.6,
-        delay: 0.5,
+        delay: 1,
         ease: "power2.out",
         pointerEvents: "auto"
       });
@@ -110,7 +111,7 @@ function Gallery() {
         const itemCenter = rect.left + rect.width / 2;
 
         const distance = Math.abs(heroX - itemCenter);
-        const maxDistance = 1000;
+        const maxDistance = window.innerWidth / 2; // in pixels
         const u = 1 - Math.min(distance / maxDistance, 1);
 
         gsap.set(item, {
@@ -150,7 +151,7 @@ function Gallery() {
       // start a new one: if no new item entered for 1s, print
       idleTimerRef.current = window.setTimeout(() => {
         if (!displayProjects[activeIndex]) return;
-        
+
         const project = displayProjects[activeIndex];
         printProjectInfo(project);
         setActiveProject(project);
@@ -160,17 +161,22 @@ function Gallery() {
   }
 
   const printProjectInfo = (project: any) => {
-    const title: String = project?.title.toUpperCase() || "untitled";
-    const subtitle: String = project?.subtitle || "undefined";
+    const title: string = project?.title.toUpperCase() || "untitled";
+    const subtitle: string = project?.subtitle || "undefined";
+    const newTags: Tag[] =
+      project?.tags
+        ?.map((t: any) => ({ name: t.fields?.name }))
+        .filter((t: Tag) => Boolean(t.name)) ?? [];
+    const tags: string = newTags.map((t) => ("&lt;" + t.name + "&gt;")).join(" ") || "no tags";
 
-    clearQueue();
+      clearQueue();
     clearTerminalActives();
     enqueueLine("");
     enqueueLine(`title: ${title.toUpperCase()}`);
     enqueueLine(`type: ${subtitle.toLowerCase()}`);
-
+    enqueueLine("");
+    enqueueLine(tags);
   }
-
 
   const computeCenters = (items: HTMLElement[]) => {
     centersRef.current = items.map((el) => el.offsetLeft + el.offsetWidth / 2);

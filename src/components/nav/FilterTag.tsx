@@ -42,7 +42,7 @@ function FilterTag({ tag, isProjectTag, onSelect }: FilterTagProps) {
   const classList = isActive ? 'hoverEl ml-3 text-text-highlight flex flex-row' : 'hoverEl ml-3 text-text flex flex-row';
 
   const handleClick = () => {
-    // onSelect();
+    onSelect();
     clearQueue();
     clearTerminalActives();
     if (isProjectTag) {

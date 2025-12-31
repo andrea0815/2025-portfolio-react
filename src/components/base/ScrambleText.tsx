@@ -15,6 +15,7 @@ function ScrambleText({ text, isStatic = false }: ScrambleTextProps) {
         ignore: [" "],
         playOnMount: false,
         overflow: true,
+        overdrive: false,
     });
 
     useEffect(() => {

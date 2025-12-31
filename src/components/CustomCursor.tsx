@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { usePageTransition } from "../stores/usePageTransition";
 
 function CustomCursor() {
-  
+
   const requestTransition = usePageTransition((s) => s.requestTransition);
 
   const location = useLocation();
@@ -16,8 +16,12 @@ function CustomCursor() {
   const ringRef = useRef<HTMLDivElement | null>(null);
   const releasedRef = useRef(false);
 
+  const isTouch = window.matchMedia("(pointer: coarse)").matches;
 
   useEffect(() => {
+
+    if (isTouch) return;
+
     const cursor = cursorRef.current;
     const ring = ringRef.current;
 
@@ -126,19 +130,22 @@ function CustomCursor() {
 
   return (
     <>
-      <div
-        ref={cursorRef}
-        className="cursorDot fixed z-[999999] w-4 h-4 left-0 top-0
-        -translate-x-1/2 -translate-y-1/2 bg-cursor
-        rounded-full pointer-events-none mix-blend-difference"
-      ></div>
-
-      <div
-        ref={ringRef}
-        className="cursorRing fixed z-[999998] w-[75px] h-[75px] left-0 top-0
-  -translate-x-1/2 -translate-y-1/2 border border-white-20
-  rounded-full opacity-0 pointer-events-none"
-      ></div>
+      {!isTouch && (
+        <>
+          <div
+            ref={cursorRef}
+            className="cursorDot fixed z-[999999] w-4 h-4 left-0 top-0
+            -translate-x-1/2 -translate-y-1/2 bg-cursor
+            rounded-full pointer-events-none mix-blend-difference"
+          />
+          <div
+            ref={ringRef}
+            className="cursorRing fixed z-[999998] w-[75px] h-[75px] left-0 top-0
+            -translate-x-1/2 -translate-y-1/2 border border-white-20
+            rounded-full opacity-0 pointer-events-none"
+          />
+        </>
+      )}
     </>
   );
 }

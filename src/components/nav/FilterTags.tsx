@@ -24,29 +24,29 @@ function FilterTags() {
     const [showAll, setShowAll] = useState(false); // indicates if all topics are shown or only the current one
 
     useEffect(() => {
-        console.log(currentTopic);
+        if (!isProjects) {
+            setShowAll(true);
+        };
+    })
 
+    useEffect(() => {
         setProjectTagArray(currentTopic.tags);
     }, [currentTopic]);
 
     useEffect(() => {
+        // set correct tag array and filter tag visibility based on current path
         setTagArray(isProjects ? projectTagArray : aboutTagArray);
+        setShowAll(!isProjects); 
     }, [isProjects, projectTagArray, aboutTagArray]);
 
-    function handleClick(tagName: string) {
-        if (tagName === "filter") {
-            // clicking on the current topic toggles visibility
-            setShowAll((prev) => !prev);
-        } else {
-            // clicking on another topic selects it
-            setShowAll(false); // collapse again
-        }
+    function toggleFilterVisibility() {
+        setShowAll((prev) => !prev);
     }
 
-    // const visibleTags = showAll
-    //     ? projectTagArray // show everything
-    //     : [{name: "filter"}]; // show only selected
-    const visibleTags = tagArray; // show only selected
+    const visibleTags = showAll
+        ? tagArray
+        : [];
+    const filterButtonText = showAll || !isProjects ? "X" : "filters";
 
     return (
         <>
@@ -54,11 +54,18 @@ function FilterTags() {
                 <Fragment key={tag.name}>
                     <FilterTag
                         tag={tag}
-                        onSelect={() => handleClick(tag.name)}
+                        onSelect={() => { }}
                         isProjectTag={isProjects}
                     />
                 </Fragment>
             ))}
+            {isProjects &&
+                <FilterTag
+                    tag={{ name: filterButtonText }}
+                    onSelect={() => { toggleFilterVisibility() }}
+                    isProjectTag={false}
+                />
+            }
         </>
     );
 }

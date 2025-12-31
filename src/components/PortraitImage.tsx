@@ -50,8 +50,8 @@ function PortraitImage() {
             quickY(y);
         };
 
-        window.addEventListener("mousemove", move);
-        return () => window.removeEventListener("mousemove", move);
+        window.addEventListener("pointermove", move);
+        return () => window.removeEventListener("pointermove", move);
     }, []);
 
 
