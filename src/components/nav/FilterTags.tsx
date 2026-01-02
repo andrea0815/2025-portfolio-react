@@ -7,6 +7,7 @@ import textData from "../../texts.json";
 import type { Tag } from "../../stores/useContentful";
 
 import FilterTag from "./FilterTag";
+import FilterButton from "./FilterButton";
 
 function FilterTags() {
 
@@ -18,6 +19,7 @@ function FilterTags() {
     const currentTopic = useTopicStore((s) => s.currentTopic); // the true "current" topic
     const aboutTags = textData.aboutTags as Tag[]; // the true "current" topic
 
+    // states
     const [projectTagArray, setProjectTagArray] = useState<Tag[]>(currentTopic.tags); // array for this component
     const [aboutTagArray, setAboutTagArray] = useState<Tag[]>(aboutTags); // array for this component
     const [tagArray, setTagArray] = useState<Tag[]>(isProjects ? projectTagArray : aboutTagArray); // array for this component
@@ -36,17 +38,12 @@ function FilterTags() {
     useEffect(() => {
         // set correct tag array and filter tag visibility based on current path
         setTagArray(isProjects ? projectTagArray : aboutTagArray);
-        setShowAll(!isProjects); 
+        setShowAll(!isProjects);
     }, [isProjects, projectTagArray, aboutTagArray]);
-
-    function toggleFilterVisibility() {
-        setShowAll((prev) => !prev);
-    }
 
     const visibleTags = showAll
         ? tagArray
         : [];
-    const filterButtonText = showAll || !isProjects ? "X" : "filters";
 
     return (
         <>
@@ -59,13 +56,11 @@ function FilterTags() {
                     />
                 </Fragment>
             ))}
-            {isProjects &&
-                <FilterTag
-                    tag={{ name: filterButtonText }}
-                    onSelect={() => { toggleFilterVisibility() }}
-                    isProjectTag={false}
-                />
-            }
+
+            <FilterButton
+                showAll={showAll}
+                setShowAll={setShowAll}
+            />
         </>
     );
 }

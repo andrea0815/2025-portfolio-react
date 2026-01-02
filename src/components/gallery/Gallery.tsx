@@ -12,6 +12,7 @@ import GalleryItem from './GalleryItem';
 
 function Gallery() {
   const projects = useContentful((s) => s.projects);
+  const SCROLL_HEIGHT = projects.length * 100; // in vh
 
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
@@ -21,8 +22,6 @@ function Gallery() {
   const location = useLocation();
   const isProjects = location.pathname === "/projects";
 
-  const SCROLL_HEIGHT = projects.length * 100; // in vh
-
   const displayProjects = projects;
   const galleryRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -30,9 +29,15 @@ function Gallery() {
   const activeIndexRef = useRef<number>(-1);
   const idleTimerRef = useRef<number | null>(null);
 
+  const [scrollEnabled, setScrollEnabled] = useState<boolean>(isProjects);
+
   // animate on path change
   useEffect(() => {
+
+    setScrollEnabled(isProjects); // enable or disable scroll based on path
+
     const el = galleryRef.current;
+    
     if (!el) return;
 
     if (!isProjects) {
@@ -150,7 +155,7 @@ function Gallery() {
 
       // start a new one: if no new item entered for 1s, print
       idleTimerRef.current = window.setTimeout(() => {
-        if (!displayProjects[activeIndex]) return;
+        if (!displayProjects[activeIndex] && isProjects) return;
 
         const project = displayProjects[activeIndex];
         printProjectInfo(project);
@@ -169,7 +174,7 @@ function Gallery() {
         .filter((t: Tag) => Boolean(t.name)) ?? [];
     const tags: string = newTags.map((t) => ("&lt;" + t.name + "&gt;")).join(" ") || "no tags";
 
-      clearQueue();
+    clearQueue();
     clearTerminalActives();
     enqueueLine("");
     enqueueLine(`title: ${title.toUpperCase()}`);
@@ -183,9 +188,9 @@ function Gallery() {
   };
 
   return (
-    <section ref={scrollRef} className='fixed h-screen w-screen select-none overflow-y-scroll snap-y snap-mandatory  no-scrollbar mix-blend-difference'>
+    <section ref={scrollRef} className={`fixed h-screen w-screen select-none ${scrollEnabled ? "overflow-y-scroll" : "overflow-y-hidden"} snap-y snap-mandatory  no-scrollbar mix-blend-difference`}>
 
-      <div ref={galleryRef} className='w-full fixed -z-20 flex top-1/2 -translate-y-1/2 overflow-x-auto items-center no-scrollbar '>
+      <div ref={galleryRef} className='w-full fixed -z-20 flex top-1/2 -translate-y-1/2 overflow-x-auto items-center no-scrollbar'>
         <div className='flex flex-row items-end gap-2 lg:gap-5 flex-nowrap pl-[50vw] pr-8'>
           {displayProjects.map((project, index) => (
             <GalleryItem
