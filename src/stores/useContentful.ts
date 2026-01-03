@@ -13,24 +13,22 @@ interface ContenfulStore {
 }
 
 export interface Project {
-    title: any;
-    subtitle: any;
-    description: any;
-    date: any;
+    title: string;
+    subtitle: string;
+    description: string;
+    date: Date;
     thumbnail?: any;
     topics?: any;
     tags?: any;
     tools?: any;
     gallery?: any[];
-    linkText?: any;
-    link?: any;
+    links: ProjectLink[];
 }
 
 export interface Topic {
     name: string;
     tags: Tag[];
 }
-
 
 export interface Tag {
     name: string;
@@ -40,6 +38,14 @@ export interface Tool {
     name: string;
 }
 
+export type ProjectLink = {
+    buttonText: string;
+    url: string;
+};
+
+
+// Heler types 
+type LinkEntryFields = { fields?: { buttonText?: string; url?: string } };
 
 export const useContentful = create<ContenfulStore>((set) => ({
     projects: [],
@@ -56,7 +62,7 @@ export const useContentful = create<ContenfulStore>((set) => ({
             } as Record<string, any>);
             const allItems = response.items;
 
-            console.log(allItems);
+            // console.log(allItems);
 
             // Split by content type
             const projects = allItems
@@ -65,15 +71,22 @@ export const useContentful = create<ContenfulStore>((set) => ({
                     title: i.fields.title as string,
                     subtitle: i.fields.subtitle as string,
                     description: i.fields.description as string,
-                    date: i.fields.date as string,
+                    date: new Date(i.fields.date as string),
                     thumbnail: i.fields.thumbnail,
                     topics: i.fields.topics,
                     tags: Array.isArray(i.fields.tags) ? i.fields.tags : [],
                     tools: Array.isArray(i.fields.tools) ? i.fields.tools : [],
                     gallery: Array.isArray(i.fields.gallery) ? i.fields.gallery : [],
-                    linkText: i.fields.linkText as string | undefined,
-                    link: i.fields.link as string | undefined,
-                }));
+                    links: Array.isArray(i.fields.links)
+                        ? (i.fields.links as LinkEntryFields[]).map((link): ProjectLink => ({
+                            buttonText: String(link.fields?.buttonText ?? ""),
+                            url: String(link.fields?.url ?? ""),
+                        }))
+                        : [],
+                }))
+                .sort((a, b) => {
+                    return new Date(b.date).getTime() - new Date(a.date).getTime();
+                });
 
             const topics = allItems
                 .filter((i) => i.sys.contentType.sys.id === "topics")
@@ -98,7 +111,7 @@ export const useContentful = create<ContenfulStore>((set) => ({
                     name: i.fields.name as string
                 }));
 
-            // console.log(projects);
+            console.log(projects);
             // console.log(tools);
             // console.log(topics);
             // console.log(tags);

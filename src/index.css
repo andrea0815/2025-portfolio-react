@@ -4,7 +4,10 @@
 
 @theme {
   --color-*: initial;
+  --color-blue: #0054ff;
+  --color-blue-50: #aabdff6b;
   --color-yellow: #DAD53C;
+  --color-yellow-50: #DAD53C88;
   --color-khaki: #665c11;
   --color-khaki-50: #665c1188;
   --color-white: #FFFFFF;
@@ -18,8 +21,8 @@
   --color-text: var(--color-gray-100);
   --color-text-highlight: var(--color-black);
   --color-background: var(--color-white);
-  --color-primary: var(--color-khaki);
-  --color-secondary: var(--color-yellow);
+  --color-primary: var(--color-blue);
+  --color-secondary: var(--color-blue-50);
   --color-grayish: var(--color-gray-100-10);
   --color-highlight: var(--color-black);
   --color-heading: var(--color-gray-200);

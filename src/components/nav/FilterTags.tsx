@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { useTopicStore } from "../../stores/useTopic";
+import { useFilterStore } from "../../stores/useFilter";
 import textData from "../../texts.json";
 
 import type { Tag } from "../../stores/useContentful";
@@ -13,14 +13,14 @@ function FilterTags() {
 
     // navigation
     const location = useLocation();
-    const isProjects = location.pathname === "/projects";
+    const isProjects = location.pathname.startsWith("/projects");
 
     // stores
-    const currentTopic = useTopicStore((s) => s.currentTopic); // the true "current" topic
+    const currentTopic = useFilterStore((s) => s.currentTopic); // the true "current" topic
     const aboutTags = textData.aboutTags as Tag[]; // the true "current" topic
 
     // states
-    const [projectTagArray, setProjectTagArray] = useState<Tag[]>(currentTopic.tags); // array for this component
+    const [projectTagArray, setProjectTagArray] = useState<Tag[]>(currentTopic?.tags || []); // array for this component
     const [aboutTagArray, setAboutTagArray] = useState<Tag[]>(aboutTags); // array for this component
     const [tagArray, setTagArray] = useState<Tag[]>(isProjects ? projectTagArray : aboutTagArray); // array for this component
     const [showAll, setShowAll] = useState(false); // indicates if all topics are shown or only the current one
@@ -32,7 +32,7 @@ function FilterTags() {
     })
 
     useEffect(() => {
-        setProjectTagArray(currentTopic.tags);
+        setProjectTagArray(currentTopic?.tags || []);
     }, [currentTopic]);
 
     useEffect(() => {

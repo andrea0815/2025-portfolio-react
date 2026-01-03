@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 import { useTerminalStore } from "../stores/useTerminal";
-import { useTopicStore } from "../stores/useTopic";
+import { useFilterStore } from "../stores/useFilter";
 import { useContentful } from "../stores/useContentful";
 
 import textData from "../texts.json";
@@ -15,15 +15,15 @@ function Heading() {
   // stores
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const clearActives = useTerminalStore((s) => s.clearActives);
-  const setCurrentTopic = useTopicStore((s) => s.setCurrentTopic);
+  const setCurrentTopic = useFilterStore((s) => s.setCurrentTopic);
 
   // navigation logic
   const location = useLocation();
   const isLanding = location.pathname === "/";
-  const isProjects = location.pathname === "/projects";
+  const isProjects = location.pathname.startsWith("/projects");
   const isAbout = location.pathname === "/about";
 
-  const currentTopic = useTopicStore((s) => s.currentTopic);
+  const currentTopic = useFilterStore((s) => s.currentTopic);
 
   // Array Lists
   const topics = useContentful((s) => s.topics);

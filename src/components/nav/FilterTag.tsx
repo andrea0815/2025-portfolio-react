@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ScrambleText from '../base/ScrambleText';
 
-import { useTopicStore } from "../../stores/useTopic";
+import { useFilterStore } from "../../stores/useFilter";
 import { useTerminalStore } from "../../stores/useTerminal";
 import { useContentful } from "../../stores/useContentful";
 
@@ -14,17 +14,18 @@ import textData from "../../texts.json";
 type FilterTagProps = {
   tag: Tag;
   isProjectTag: boolean;
+  isFilterButton?: boolean;
   onSelect: () => void;
 };
 
-function FilterTag({ tag, isProjectTag, onSelect }: FilterTagProps) {
+function FilterTag({ tag, isProjectTag, isFilterButton, onSelect }: FilterTagProps) {
 
   const tools: Tool[] = useContentful((s) => s.tools);
 
-  const addFilter = useTopicStore((s) => s.addFilter);
-  const removeFilter = useTopicStore((s) => s.removeFilter);
-  const clearAllFilters = useTopicStore((s) => s.clearAllFilters);
-  const currentFilters = useTopicStore((s) => s.currentFilters);
+  const addFilter = useFilterStore((s) => s.addFilter);
+  const removeFilter = useFilterStore((s) => s.removeFilter);
+  const clearAllFilters = useFilterStore((s) => s.clearAllFilters);
+  const currentFilters = useFilterStore((s) => s.currentFilters);
 
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const enqueueMultiple = useTerminalStore((s) => s.enqueueMultiple);
@@ -45,6 +46,9 @@ function FilterTag({ tag, isProjectTag, onSelect }: FilterTagProps) {
     onSelect();
     clearQueue();
     clearTerminalActives();
+
+    if (isFilterButton) return;
+
     if (isProjectTag) {
       handleProjectsClick();
     } else {

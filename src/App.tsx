@@ -6,7 +6,7 @@ import gsap from 'gsap';
 
 // stores
 import { useContentful } from "./stores/useContentful";
-import { useTopicStore } from "./stores/useTopic";
+import { useFilterStore } from "./stores/useFilter";
 
 // Page imports
 import MainLayout from "./layouts/MainLayout";
@@ -14,6 +14,7 @@ import LandingPage from "./pages/LandingPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import AboutPage from "./pages/AboutPage";
 import PageNotFound from "./pages/PageNotFound";
+import ProjectDetailPage from "./pages/ProjectDetailPage";
 
 // register GSAP plugins
 gsap.registerPlugin(ScrambleTextPlugin, SplitText, ScrollTrigger);
@@ -24,8 +25,7 @@ function App() {
   const error = useContentful((s) => s.error);
   const topics = useContentful((s) => s.topics);
 
-  const setCurrentTopic = useTopicStore((s) => s.setCurrentTopic);
-  const currentTopic = useTopicStore((s) => s.currentTopic);
+  const setCurrentTopic = useFilterStore((s) => s.setCurrentTopic);
 
   useEffect(() => {
     fetchAll();
@@ -52,6 +52,7 @@ function App() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<LandingPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/projects/*" element={<ProjectDetailPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>

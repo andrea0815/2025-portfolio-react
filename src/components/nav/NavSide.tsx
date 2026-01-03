@@ -11,7 +11,7 @@ type NavSideProps = {
 
 function NavSide({ parentRef }: NavSideProps) {
   const location = useLocation();
-  const isProjects = location.pathname === "/projects";
+  const isProjects = location.pathname.startsWith("/projects");
 
   // Helper: animate visible topicEls
   const animateShow = () => {

@@ -1,7 +1,7 @@
 import { useMemo, Fragment, useState, useEffect } from "react";
 
 import { useContentful } from "../../stores/useContentful";
-import { useTopicStore } from "../../stores/useTopic";
+import { useFilterStore } from "../../stores/useFilter";
 import { useTerminalStore } from "../../stores/useTerminal";
 
 import TopicTag from "./TopicTag";
@@ -12,9 +12,9 @@ function TopicTags() {
 
     // stores
     const topics = useContentful((s) => s.topics);
-    const currentTopic = useTopicStore((s) => s.currentTopic);
-    const setCurrentTopic = useTopicStore((s) => s.setCurrentTopic);
-    const clearAllFilters = useTopicStore((s) => s.clearAllFilters);
+    const currentTopic = useFilterStore((s) => s.currentTopic);
+    const setCurrentTopic = useFilterStore((s) => s.setCurrentTopic);
+    const clearAllFilters = useFilterStore((s) => s.clearAllFilters);
     const enqueueLine = useTerminalStore((s) => s.enqueueLine);
     const clearTerminalActives = useTerminalStore((s) => s.clearActives);
     const clearQueue = useTerminalStore((s) => s.clearQueue);

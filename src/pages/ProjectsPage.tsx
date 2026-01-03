@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useTerminalStore } from "../stores/useTerminal";
 import { usePageTransition } from "../stores/usePageTransition";
-import { useTopicStore } from "../stores/useTopic";
+import { useFilterStore } from "../stores/useFilter";
 
 import textData from "../texts.json";
 import ProjectInfoPanel from "../components/ProjectInfoPanel";
@@ -21,7 +21,7 @@ function ProjectPage() {
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
   const clearQueue = useTerminalStore((s) => s.clearQueue);
-  const clearAllFilters = useTopicStore((s) => s.clearAllFilters);
+  const clearAllFilters = useFilterStore((s) => s.clearAllFilters);
 
 
   const loadText: string = textData.loaded[0];

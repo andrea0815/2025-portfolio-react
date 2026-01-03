@@ -6,35 +6,45 @@ import { usePageTransition } from "../stores/usePageTransition";
 import { useFilterStore } from "../stores/useFilter";
 
 import textData from "../texts.json";
-import PortraitImage from "../components/PortraitImage";
+import ProjectInfoPanel from "../components/ProjectInfoPanel";
 
-function AboutPage() {
+function ProjectDetailPage() {
 
   const navigate = useNavigate();
   const {
     isTransitioning,
+    completeTransition,
     targetRoute,
   } = usePageTransition();
 
-  const enqueueLine = useTerminalStore(s => s.enqueueLine);
-  const clearTerminalActives = useTerminalStore(s => s.clearActives);
+
+  const enqueueLine = useTerminalStore((s) => s.enqueueLine);
+  const clearTerminalActives = useTerminalStore((s) => s.clearActives);
   const clearQueue = useTerminalStore((s) => s.clearQueue);
   const clearAllFilters = useFilterStore((s) => s.clearAllFilters);
 
-  // Initial load effect
+
+  const loadText: string = textData.loaded[0];
+  const exitText: string = textData.exit[0];
+
   useEffect(() => {
     enqueueLine("");
-    enqueueLine(textData.loaded[0], "about");
+    enqueueLine(loadText, "projects");
 
     return () => {
       clearQueue();
       enqueueLine("");
-      enqueueLine(textData.exit[0], "about");
+      enqueueLine(exitText, "projects");
       clearTerminalActives();
     };
-  }, []);
+  }, [])
 
-  // ON ANIMATION FINISH, NAVIGATE
+  // PAGE TRANSITION
+
+  useEffect(() => {
+    completeTransition();
+  }, [isTransitioning]);
+
   useEffect(() => {
     if (!isTransitioning && targetRoute) {
       clearAllFilters();
@@ -43,11 +53,10 @@ function AboutPage() {
   }, [isTransitioning]);
 
   return (
-    <div className="w-full h-full flex justify-center items-center">
-      <PortraitImage />
-</div>
+    <>
+      <ProjectInfoPanel />
+    </>
   );
 }
 
-
-export default AboutPage;
+export default ProjectDetailPage;

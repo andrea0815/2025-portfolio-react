@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-import { useTopicStore } from "../../stores/useTopic";
+import { useFilterStore } from "../../stores/useFilter";
 
 import FilterTag from "./FilterTag";
 
@@ -11,9 +11,9 @@ type FilterButtonProps = {
 
 function FilterButton({ showAll, setShowAll }: FilterButtonProps) {
     const location = useLocation();
-    const isProjects = location.pathname === "/projects";
+    const isProjects = location.pathname.startsWith("/projects");
 
-    const clearAllFilters = useTopicStore((s) => s.clearAllFilters); // the true "current" topic
+    const clearAllFilters = useFilterStore((s) => s.clearAllFilters); // the true "current" topic
 
     function toggleFilterVisibility() {
         setShowAll((prev) => !prev);
@@ -29,6 +29,7 @@ function FilterButton({ showAll, setShowAll }: FilterButtonProps) {
                     tag={{ name: filterButtonText }}
                     onSelect={() => { toggleFilterVisibility() }}
                     isProjectTag={false}
+                    isFilterButton={true}
                 />
             }
         </>

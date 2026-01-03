@@ -3,28 +3,26 @@ import ScrambleText from "../components/base/ScrambleText";
 
 import { useProjectsStore } from "../stores/useProjects";
 
-import type { Tag } from "../stores/useContentful";
+import type { ProjectLink } from "../stores/useContentful";
+import GalleryLinkButton from './gallery/GalleryLinkButton';
 
 function ProjectInfoPanel() {
     const activeProject = useProjectsStore((s) => s.activeProject);
-    const [tags, setTags] = useState<Tag[]>([]);
+    const [links, setLinks] = useState<ProjectLink[]>([]);
 
-    // useEffect(() => {
-    //     const newTags: Tag[] =
-    //         activeProject?.tags
-    //             ?.map((t: any) => ({ name: t.fields?.name }))
-    //             .filter((t: Tag) => Boolean(t.name)) ?? [];
 
-    //     setTags(newTags);
-    // }, [activeProject]);
+    useEffect(() => {
+        setLinks(activeProject?.links ?? []);
+    }, [activeProject]);
 
 
     return (
-        <div className='flex flex-row flex-wrap-reverse gap-3 text-right hover:text-highlight align-right justify-end '>
-            {tags.map((tag: Tag, index: number) => (
-                <ScrambleText
+        <div className='flex flex-row flex-wrap-reverse gap-3 text-right align-right justify-end '>
+            {links.map((link: ProjectLink, index: number) => (
+                <GalleryLinkButton
                     key={index}
-                    text={"&lt;" + tag.name + "&gt;"}
+                    text={link.buttonText}
+                    url={link.url}
                 />
             ))}
         </div>
