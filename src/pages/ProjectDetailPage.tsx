@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useTerminalStore } from "../stores/useTerminal";
 import { usePageTransition } from "../stores/usePageTransition";
 import { useFilterStore } from "../stores/useFilter";
-import { useProjectsStore } from "../stores/useProjects";
 
 import textData from "../texts.json";
 import ProjectInfoPanel from "../components/ProjectInfoPanel";
@@ -20,22 +19,37 @@ function ProjectDetailPage() {
 
 
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
+  const enqueueMultiple = useTerminalStore((s) => s.enqueueMultiple);
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
   const clearQueue = useTerminalStore((s) => s.clearQueue);
   const clearAllFilters = useFilterStore((s) => s.clearAllFilters);
-  const activeProject = useProjectsStore((s) => s.activeProject);
+  const currentProject = useFilterStore((s) => s.currentProject);
 
   const loadText: string = textData.loaded[0];
   const exitText: string = textData.exit[0];
 
   useEffect(() => {
+
+    const date = currentProject?.date;
+    const formattedDate = date
+      ? formatMonthYear(date)
+      : "";
+    const tools = currentProject?.tools.map((tool: any) => `"${tool.fields.name}"`) || [];
+
+    // enqueueLine("");
+    // enqueueLine(loadText, `project: ${currentProject?.title.toUpperCase()}`);
     enqueueLine("");
-    enqueueLine(loadText, `project: ${activeProject?.title.toUpperCase()}`);
+    enqueueLine(`date: "${formattedDate}"`);
+    enqueueLine("");
+    enqueueLine("tools:");
+    enqueueMultiple(tools ?? []);
+    enqueueLine("");
+    enqueueLine(`${currentProject?.description}`);
 
     return () => {
       clearQueue();
       enqueueLine("");
-      enqueueLine(exitText, `project: ${activeProject?.title.toUpperCase()}`);
+      enqueueLine(exitText, `project: ${currentProject?.title.toUpperCase()}`);
       clearTerminalActives();
     };
   }, [])
@@ -48,10 +62,16 @@ function ProjectDetailPage() {
 
   useEffect(() => {
     if (!isTransitioning && targetRoute) {
-      clearAllFilters();
+      if (!targetRoute.startsWith("/projects")) clearAllFilters();
       navigate(targetRoute);
     }
   }, [isTransitioning]);
+
+  function formatMonthYear(date: Date): string {
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${month}-${year}`;
+  }
 
   return (
     <>

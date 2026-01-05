@@ -1,9 +1,11 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
+
 import { clamp, measureGeometry } from "./galleryGeometry";
 
 type UseGsapScrollGalleryArgs = {
     enabled: boolean;
+    itemsKey: number | string;
     scrollRef: React.RefObject<HTMLDivElement | null>;
     galleryRef: React.RefObject<HTMLDivElement | null>;
     fokusOffsetRight: number;
@@ -18,6 +20,7 @@ type UseGsapScrollGalleryArgs = {
 
 export function useGsapScrollGallery({
     enabled,
+    itemsKey,
     scrollRef,
     galleryRef,
     fokusOffsetRight,
@@ -59,7 +62,7 @@ export function useGsapScrollGallery({
             const vh = scrollEl.clientHeight; // viewport height
             const raw = scrollEl.scrollTop / vh; // raw scroll position in "dvh" units
 
-            const activeIndex = Math.round(raw);
+            const activeIndex = Math.floor(raw + 0.4);
             onActiveIndex(activeIndex);
 
             const i0 = Math.floor(raw); // current index
@@ -115,5 +118,5 @@ export function useGsapScrollGallery({
             scrollEl.removeEventListener("scroll", apply);
             window.removeEventListener("resize", onResize);
         };
-    }, [enabled, scrollRef, galleryRef, fokusOffsetRight, scaleMin, scaleRange, opacityMin, opacityRange, itemSelector, trackSelector, onActiveIndex]);
+    }, [enabled, itemsKey, scrollRef, galleryRef, fokusOffsetRight, scaleMin, scaleRange, opacityMin, opacityRange, itemSelector, trackSelector, onActiveIndex]);
 }

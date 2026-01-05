@@ -2,19 +2,19 @@ import React from 'react';
 
 type GalleryScrollerProps = {
     scrollRef: any;
-    displayProjects: any[];
+    displayProjectsCount: number;
 }
 
-function GalleryScroller({ scrollRef, displayProjects }: GalleryScrollerProps) {
+function GalleryScroller({ scrollRef, displayProjectsCount }: GalleryScrollerProps) {
 
-    const SCROLL_HEIGHT = displayProjects.length * 100;
+    const SCROLL_HEIGHT = displayProjectsCount * 100;
 
     return (
         <div
             className="scroll-container select-auto flex flex-col text-white snap-y snap-mandatory"
             style={{ height: `${SCROLL_HEIGHT}dvh` }}
         >
-            {displayProjects.map((_, index) => (
+            {Array.from({ length: displayProjectsCount }, (_, index) => (
                 <div key={index} className="h-dvh snap-start" />
             ))}
         </div>

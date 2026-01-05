@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import ScrambleText from "../components/base/ScrambleText";
 
-import { useProjectsStore } from "../stores/useProjects";
+import { useFilterStore } from "../stores/useFilter";
 
 import type { ProjectLink } from "../stores/useContentful";
 import GalleryLinkButton from './gallery/GalleryLinkButton';
 
 function ProjectInfoPanel() {
-    const activeProject = useProjectsStore((s) => s.activeProject);
+    const currentProject = useFilterStore((s) => s.currentProject);
     const [links, setLinks] = useState<ProjectLink[]>([]);
 
 
     useEffect(() => {
-        setLinks(activeProject?.links ?? []);
-    }, [activeProject]);
+        setLinks(currentProject?.links ?? []);
+    }, [currentProject]);
 
 
     return (

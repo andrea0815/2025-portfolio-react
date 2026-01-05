@@ -1,12 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMatch } from "react-router-dom";
 
+import { useContentful } from "../../stores/useContentful";
 import { useTerminalStore } from "../../stores/useTerminal";
-import { useProjectsStore } from "../../stores/useProjects";
+import { useFilterStore } from "../../stores/useFilter";
 import { useFilteredProjects } from "../../hooks/useFilteredProjects";
 import { usePageTransition } from "../../stores/usePageTransition";
 import { useGsapScrollGallery } from "./useGsapScrollGallery";
-import { useIdleActiveProject } from "./UseIdleActiveProject";
+import { useIdleCurrentProject } from "./UseIdleCurrentProject";
+import { useGalleryDisplayItems } from "./useGalleryDisplayItems";
 
 import type { Tag, Project } from "../../stores/useContentful";
 
@@ -14,47 +16,71 @@ import GalleryScroller from "./GalleryScroller";
 import GalleryHorizontalSlider from "./GalleryHorizontalSlider";
 
 function Gallery() {
+
+  const allProjects = useContentful((s) => s.projects);
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
   const clearQueue = useTerminalStore((s) => s.clearQueue);
-  const setActiveProject = useProjectsStore((s) => s.setActiveProject);
-  const activeProject = useProjectsStore((s) => s.activeProject);
+  const setCurrentProject = useFilterStore((s) => s.setCurrentProject);
+  const currentProject = useFilterStore((s) => s.currentProject);
   const requestTransition = usePageTransition((s) => s.requestTransition);
 
   const isProjects = !!useMatch("/projects/*");
   const isDetailPage = !!useMatch("/projects/:slug");
   const scrollEnabled = isProjects;
 
-  const displayProjects = useFilteredProjects();
-  
+  const filteredProjects = useFilteredProjects();
+
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // ref only for GSAP/timers (avoids stale closures)
-  const displayProjectsRef = useRef<Project[]>(displayProjects);
-  useEffect(() => {
-    displayProjectsRef.current = displayProjects;
-  }, [displayProjects]);
+  const lastScrollPosition = useRef<number>(0);
 
-  const IDLE_SELECT_MS = 1000;
+  const IDLE_SELECT_MS = 800;
   const FOKUS_OFFSET_RIGHT = true ? 100 : 60; // padding in px 
   const SCALE_MIN = 0.75;
   const SCALE_RANGE = 0.25;
   const OPACITY_MIN = 0.15;
   const OPACITY_RANGE = 0.85;
 
-  const setIndex = useIdleActiveProject<Project>({
+  useEffect(() => {
+    if (!isProjects) return;
+
+    // when we are on the list page (not detail), restore
+    if (!isDetailPage) {
+      scrollRef.current?.scrollTo({
+        top: lastScrollPosition.current,
+        behavior: "smooth",
+      });
+    } else {
+      // on detail page, go to top
+      scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [isDetailPage, isProjects]);
+
+  const { items: sliderItems, activeProject } = useGalleryDisplayItems(
+    filteredProjects,
+    allProjects
+  );
+
+  const setIndex = useIdleCurrentProject<Project>({
     enabled: isProjects,
     delayMs: IDLE_SELECT_MS,
-    getItem: (index) => displayProjects[index],
+    getItem: (index) => {
+      if (isDetailPage) return activeProject ?? undefined;
+      return filteredProjects[index];
+    },
     onIdleSelect: (project) => {
-      printProjectInfo(project);
-      setActiveProject(project);
+      if (!isDetailPage) {
+        printProjectInfo(project);
+        setCurrentProject(project);
+      }
     },
   });
 
   useGsapScrollGallery({
-    enabled: isProjects && !isDetailPage, // example: disable animation on detail page
+    enabled: isProjects, // example: disable animation on detail page
+    itemsKey: sliderItems.length,
     scrollRef,
     galleryRef,
     fokusOffsetRight: FOKUS_OFFSET_RIGHT,
@@ -84,10 +110,16 @@ function Gallery() {
   };
 
   const handleClick = () => {
-    const link = !isDetailPage ? `/projects/${activeProject?.slug ?? ""}` : `/projects`
-    console.log(link);
-    requestTransition(link);
-  }
+    // leaving LIST -> going DETAIL: save current scrollTop
+    if (!isDetailPage) {
+      lastScrollPosition.current = scrollRef.current?.scrollTop ?? 0;
+      requestTransition(`/projects/${currentProject?.slug ?? ""}`);
+      return;
+    }
+
+    // leaving DETAIL -> going back LIST:
+    requestTransition("/projects");
+  };
 
   return (
     <section
@@ -99,12 +131,12 @@ function Gallery() {
 
       <GalleryHorizontalSlider
         galleryRef={galleryRef}
-        displayProjects={displayProjects}
+        items={sliderItems}
       />
 
       <GalleryScroller
         scrollRef={scrollRef}
-        displayProjects={displayProjects}
+        displayProjectsCount={sliderItems.length}
       />
     </section>
   );

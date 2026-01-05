@@ -43,7 +43,7 @@ function TerminalLine({
     useEffect(() => {
         function updateStaticText() {
 
-            if (window.innerWidth < 1024) {
+            if (window.innerWidth < 1200) {
                 setStaticText(textData.static[1]);
             } else {
                 setStaticText(textData.static[0]);

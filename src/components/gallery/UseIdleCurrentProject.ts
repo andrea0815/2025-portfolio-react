@@ -1,19 +1,22 @@
 import { useEffect, useRef, useCallback } from "react";
 
-export type UseIdleActiveProjectsArgs<T> = {
+import { useFilterStore } from "../../stores/useFilter";
+
+export type UseIdleCurrentProjectsArgs<T> = {
     enabled: boolean;
     delayMs?: number;
     getItem: (index: number) => T | undefined;
     onIdleSelect: (item: T, index: number) => void;
 }
 
-export function useIdleActiveProject<T>({
+export function useIdleCurrentProject<T>({
     enabled,
     delayMs = 1000,
     getItem,
     onIdleSelect,
-}: UseIdleActiveProjectsArgs<T>) {
+}: UseIdleCurrentProjectsArgs<T>) {
 
+    const setCurrentProject = useFilterStore((s) => s.setCurrentProject);
     const activeIndexRef = useRef<number | null>(null);
     const timerRef = useRef<number | null>(null);
 
@@ -34,7 +37,7 @@ export function useIdleActiveProject<T>({
                 onIdleSelect(item, index);
             }, delayMs);
         },
-        [delayMs, enabled, getItem, onIdleSelect]
+        [delayMs, enabled, setCurrentProject, getItem, onIdleSelect]
     );
 
     // cleanup on unmount

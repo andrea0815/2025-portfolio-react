@@ -9,6 +9,9 @@ interface FilterStore {
     currentProjects: Project[];
     setCurrentProjects: (projects: Project[]) => void;
 
+    currentProject: Project | null,
+    setCurrentProject: (project: Project) => void,
+
     currentTopic: Topic | null;
     setCurrentTopic: (topic: Topic) => void;
 
@@ -27,12 +30,15 @@ export const useFilterStore = create<FilterStore>()(
             currentProjects: [],
             currentTopic: null,
             currentFilters: [],
-
+            currentProject: null,
+            
             setCurrentProjects: (projects) => {
                 set({ currentProjects: projects });
             },
 
-             setCurrentTopic: (topic) => {
+            setCurrentProject: (project) => set({ currentProject: project }),
+
+            setCurrentTopic: (topic) => {
                 set({ currentTopic: topic });
             },
 

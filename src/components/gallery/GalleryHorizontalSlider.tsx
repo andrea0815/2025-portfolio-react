@@ -2,22 +2,18 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useMatch } from "react-router-dom";
 import gsap from "gsap";
 
-import type { Tag, Project } from "../../stores/useContentful";
+import type { SliderAssetItem } from "./galleryTypes";
 
 import GalleryItem from "./GalleryItem";
 
 type GalleryHorizontalSliderProps = {
-    galleryRef: any,
-    displayProjects: Project[],
-}
+    galleryRef: React.RefObject<HTMLDivElement | null>;
+    items: SliderAssetItem[];
+};
 
-function GalleryHorizontalSlider({ galleryRef, displayProjects }: GalleryHorizontalSliderProps) {
+function GalleryHorizontalSlider({ galleryRef, items }: GalleryHorizontalSliderProps) {
+    const isProjects = !!useMatch("/projects/*");
 
-    const location = useLocation();
-    const isProjects = location.pathname.startsWith("/projects");
-    const isDetailPage = !!useMatch("/projects/:slug");
-
-    // animate on path change
     useEffect(() => {
         const el = galleryRef.current;
         if (!el) return;
@@ -37,16 +33,14 @@ function GalleryHorizontalSlider({ galleryRef, displayProjects }: GalleryHorizon
             className="w-full fixed -z-20 flex top-1/2 -translate-y-1/2 overflow-x-auto items-center no-scrollbar"
         >
             <div className="flex flex-row items-end lg:gap-5 flex-nowrap pl-[80vw] pr-8">
-                {displayProjects.map((project) => (
-                    <GalleryItem
-                        key={(project as any).id ?? project.title} // replace with real stable id
-                        project={project}
-                    />
+                {items.map((item) => (
+                    <GalleryItem key={item.id} item={item} />
                 ))}
                 <div className="w-[80dvw] lg:w-[65dvh]" />
             </div>
         </div>
     );
 }
+
 
 export default GalleryHorizontalSlider;

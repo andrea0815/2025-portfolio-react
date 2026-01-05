@@ -93,7 +93,7 @@ function PortraitImage() {
                 ref={portraitRef}
                 src="./images/portrait2.jpg"
                 alt="portrait"
-                className="w-[50%] relative will-change-transform"
+                className="w-[70%] relative will-change-transform"
             />
         </div>
     );

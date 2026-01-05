@@ -13,6 +13,7 @@ interface ContenfulStore {
 }
 
 export interface Project {
+    id: string;
     title: string;
     slug: string;
     subtitle: string;
@@ -63,12 +64,13 @@ export const useContentful = create<ContenfulStore>((set) => ({
             } as Record<string, any>);
             const allItems = response.items;
 
-            // console.log(allItems);
+            console.log(allItems);
 
             // Split by content type
             const projects = allItems
                 .filter((i) => i.sys.contentType.sys.id === "project")
                 .map((i) => ({
+                    id: i.sys.id as string,
                     title: i.fields.title as string,
                     slug: createSlug(i.fields.title as string),
                     subtitle: i.fields.subtitle as string,
