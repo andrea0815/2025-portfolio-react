@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTerminalStore } from "../stores/useTerminal";
 import { usePageTransition } from "../stores/usePageTransition";
 import { useFilterStore } from "../stores/useFilter";
+import { useProjectsStore } from "../stores/useProjects";
 
 import textData from "../texts.json";
 import ProjectInfoPanel from "../components/ProjectInfoPanel";
@@ -22,19 +23,19 @@ function ProjectDetailPage() {
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
   const clearQueue = useTerminalStore((s) => s.clearQueue);
   const clearAllFilters = useFilterStore((s) => s.clearAllFilters);
-
+  const activeProject = useProjectsStore((s) => s.activeProject);
 
   const loadText: string = textData.loaded[0];
   const exitText: string = textData.exit[0];
 
   useEffect(() => {
     enqueueLine("");
-    enqueueLine(loadText, "projects");
+    enqueueLine(loadText, `project: ${activeProject?.title.toUpperCase()}`);
 
     return () => {
       clearQueue();
       enqueueLine("");
-      enqueueLine(exitText, "projects");
+      enqueueLine(exitText, `project: ${activeProject?.title.toUpperCase()}`);
       clearTerminalActives();
     };
   }, [])

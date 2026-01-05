@@ -77,6 +77,7 @@ function Heading() {
 
     } else {
       el.style.opacity = "0";
+      el.style.pointerEvents = "none";
     }
   }, []);
 

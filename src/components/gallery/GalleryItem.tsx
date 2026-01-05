@@ -35,7 +35,8 @@ export function GalleryItem({ project }: GalleryItemProps) {
     }, [isActive]); // only depends on active status
 
     return (
-        <div className="hoverEl gallery-item w-[80dvw] lg:w-[clamp(0px,50dvw,70dvh)] aspect-square flex items-center justify-center snap-end select-none origin-bottom overflow-hidden">
+        <div
+            className="hoverEl gallery-item w-[80dvw] lg:w-[clamp(0px,50dvw,70dvh)] aspect-square flex items-center justify-center snap-end select-none origin-bottom overflow-hidden">
             {isVideo() ? (
                 <video
                     ref={videoRef}

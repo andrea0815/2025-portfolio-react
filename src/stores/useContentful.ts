@@ -14,6 +14,7 @@ interface ContenfulStore {
 
 export interface Project {
     title: string;
+    slug: string;
     subtitle: string;
     description: string;
     date: Date;
@@ -69,6 +70,7 @@ export const useContentful = create<ContenfulStore>((set) => ({
                 .filter((i) => i.sys.contentType.sys.id === "project")
                 .map((i) => ({
                     title: i.fields.title as string,
+                    slug: createSlug(i.fields.title as string),
                     subtitle: i.fields.subtitle as string,
                     description: i.fields.description as string,
                     date: new Date(i.fields.date as string),
@@ -131,3 +133,17 @@ export const useContentful = create<ContenfulStore>((set) => ({
         }
     },
 }));
+
+
+// Utility function to create slugs from titles
+
+function createSlug(title: string): string {
+    return title
+        .toLowerCase()
+        .normalize("NFD")                 // split accented characters (you → u + ¨)
+        .replace(/[\u0300-\u036f]/g, "")  // remove accents/diacritics
+        .replace(/ß/g, "ss")              // handle German ß explicitly
+        .replace(/[^a-z0-9]+/g, "-")      // replace non-alphanumeric chars with -
+        .replace(/^-+|-+$/g, "");         // trim leading & trailing hyphens
+}
+
