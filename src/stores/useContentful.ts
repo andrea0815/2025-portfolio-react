@@ -30,6 +30,7 @@ export interface Project {
 export interface Topic {
     name: string;
     tags: Tag[];
+    jobDescription: string;
 }
 
 export interface Tag {
@@ -64,7 +65,7 @@ export const useContentful = create<ContenfulStore>((set) => ({
             } as Record<string, any>);
             const allItems = response.items;
 
-            console.log(allItems);
+            // console.log(allItems);
 
             // Split by content type
             const projects = allItems
@@ -96,6 +97,7 @@ export const useContentful = create<ContenfulStore>((set) => ({
                 .filter((i) => i.sys.contentType.sys.id === "topics")
                 .map((i) => ({
                     name: i.fields.name as string,
+                    jobDescription: i.fields.jobDescription as string,
                     tags: Array.isArray(i.fields.tags)
                         ? i.fields.tags.map((tag: any) => ({
                             name: tag.fields.name as string,
@@ -115,9 +117,9 @@ export const useContentful = create<ContenfulStore>((set) => ({
                     name: i.fields.name as string
                 }));
 
-            console.log(projects);
+            // console.log(projects);
             // console.log(tools);
-            // console.log(topics);
+            console.log(topics);
             // console.log(tags);
 
             set({

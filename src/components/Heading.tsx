@@ -27,7 +27,7 @@ function Heading() {
 
   // Array Lists
   const topics = useContentful((s) => s.topics);
-  const landingTexts = topics?.map((t) => t.name) || [];
+  const landingTexts = topics?.map((t) => t.jobDescription) || [];
   const aboutHeading = textData.aboutHeading;
 
   // states
@@ -128,7 +128,9 @@ function Heading() {
       }
 
       replay();
-      isAbout ? enqueueLine(aboutHeading[newIndex].text, currentTextList[newIndex]) : enqueueLine(textData.greeting[0], currentTextList[newIndex]);
+      isAbout ?
+        enqueueLine(aboutHeading[newIndex].text, currentTextList[newIndex]) :
+        enqueueLine(textData.greeting[0], currentTextList[newIndex]);
     }
   }, [textIndex, currentTextList]);
 

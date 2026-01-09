@@ -27,6 +27,7 @@
   --color-highlight: var(--color-black);
   --color-heading: var(--color-gray-200);
   --color-cursor: var(--color-white);
+  --color-loader: var(--color-blue);
 
   --text-base: 13px;
 
@@ -44,9 +45,13 @@
 
   --font-mono: "bakemono-variable", sans-serif;
   --font-serif: "sway-variable", serif;
+  --font-sans: "DIN Pro", "Helvetica", sans;
 
   --layout-side: var(--spacing-8);
 
+  --breakpoint-sm: 30rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
 }
 
 @layer base {
@@ -127,6 +132,7 @@
     --color-highlight: var(--color-white);
     --color-heading: var(--color-primary);
     --color-cursor: var(--color-white);
+    --color-loader: var(--color-white);
   }
 
   .no-scrollbar {

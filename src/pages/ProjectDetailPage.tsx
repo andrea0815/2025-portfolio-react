@@ -30,10 +30,14 @@ function ProjectDetailPage() {
 
   useEffect(() => {
 
-    const date = currentProject?.date;
-    const formattedDate = date
-      ? formatMonthYear(date)
-      : "";
+    const rawDate = currentProject?.date;
+    const date =
+      rawDate instanceof Date
+        ? rawDate
+        : rawDate
+          ? new Date(rawDate)
+          : null;
+    const formattedDate = date ? formatMonthYear(date) : "date not defined";
     const tools = currentProject?.tools.map((tool: any) => `"${tool.fields.name}"`) || [];
 
     // enqueueLine("");

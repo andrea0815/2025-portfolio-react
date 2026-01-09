@@ -125,8 +125,9 @@ function Gallery() {
     <section
       ref={scrollRef}
       onClick={handleClick}
-      className={`fixed h-screen w-screen select-none ${scrollEnabled ? "overflow-y-scroll" : "overflow-y-hidden"
-        } snap-y snap-mandatory no-scrollbar mix-blend-difference`}
+      className={`fixed h-screen w-screen select-none snap-y snap-mandatory no-scrollbar mix-blend-difference
+        ${scrollEnabled ? "overflow-y-scroll" : "overflow-y-hidden"}
+        ${isProjects ? "pointer-events-auto" : "pointer-events-none"} `}
     >
 
       <GalleryHorizontalSlider

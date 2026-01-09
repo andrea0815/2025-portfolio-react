@@ -10,7 +10,7 @@ import Nav from "../components/nav/Nav";
 import Heading from "../components/Heading";
 import SocialList from "../components/SocialList";
 import Terminal from "../components/Terminal";
-import CustomCursor from "../components/CustomCursor";
+import CustomCursor from "../components/cursor/CustomCursor";
 import Gallery from "../components/gallery/Gallery";
 
 
@@ -29,7 +29,8 @@ function MainLayout() {
                 className="
                     fixed h-full w-full 
                     grid 
-                    grid-cols-[var(--spacing-7)_1fr_var(--spacing-7)]
+                    grid-cols-[var(--spacing-4)_1fr_var(--spacing-4)]
+                    md:grid-cols-[var(--spacing-7)_1fr_var(--spacing-7)]
                     lg:grid-cols-[var(--spacing-8)_1fr_var(--spacing-8)]
                     grid-rows-[100dvh]            
                     [grid-template-areas:'sidebar_main_social']
