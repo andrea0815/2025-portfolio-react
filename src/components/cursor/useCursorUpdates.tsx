@@ -20,6 +20,7 @@ type UseCursorUpdatesReturn = {
     isTouch: boolean;
     cursorRef: React.RefObject<HTMLDivElement | null>;
     loaderRef: React.RefObject<HTMLDivElement | null>;
+    pointRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export const useCursorUpdates = ({
@@ -30,9 +31,11 @@ export const useCursorUpdates = ({
 }: UseCursorUpdatesArgs): UseCursorUpdatesReturn => {
 
     const loadingTime = useCursorStore((s) => s.loadingTime);
+    const setIsDisplayingText = useCursorStore((s) => s.setIsDisplayingText);
 
     const loaderRef = useRef<HTMLDivElement | null>(null);
     const cursorRef = useRef<HTMLDivElement>(null);
+    const pointRef = useRef<HTMLDivElement | null>(null);
 
     // Keep latest isLanding without re-registering document listeners every route change.
     const isLandingRef = useRef<boolean>(isLanding);
@@ -52,6 +55,7 @@ export const useCursorUpdates = ({
         if (isTouch) return;
 
         const cursor = cursorRef.current;
+        const point = pointRef.current;
         // const ring = ringRef.current;
         if (!cursor) return;
 
@@ -65,11 +69,13 @@ export const useCursorUpdates = ({
         };
 
         const grow = () => {
-            gsap.to(cursor, { scale: 1, duration: 0.25, ease: "power3.out" });
+            gsap.to(point, { scale: 1, duration: 0.25, ease: "power3.out" });
+            setIsDisplayingText(false);
         };
-
+        
         const shrink = () => {
-            gsap.to(cursor, { scale: 0.25, duration: 0.25, ease: "power3.out" });
+            gsap.to(point, { scale: 0.25, duration: 0.25, ease: "power3.out" });
+            setIsDisplayingText(true);
         };
 
         // Define handleUp first, so press tween can call it.
@@ -84,9 +90,8 @@ export const useCursorUpdates = ({
             if (!isLandingRef.current) return;
             releasedRef.current = false;
 
-            //   gsap.to(ring, { opacity: 0.4, duration: 0.2, ease: "power1.out" });
-            loadingBarTween.timeScale(1).play();
-            cursorGrowTween.timeScale(1).play();
+            loadingBarTween.timeScale(1).restart(true);
+            cursorGrowTween.timeScale(1).restart(true);
         };
 
         const loadingBarTween = gsap.to(loaderRef.current, {
@@ -104,7 +109,7 @@ export const useCursorUpdates = ({
             },
         });
 
-        const cursorGrowTween = gsap.to(cursorRef.current, {
+        const cursorGrowTween = gsap.to(pointRef.current, {
             scale: 1,
             duration: loadingTime,
             ease: "power1.out",
@@ -159,5 +164,5 @@ export const useCursorUpdates = ({
         };
     }, [isTouch, hoverSelector, requestTransition, targetRoute]);
 
-    return { isTouch, cursorRef, loaderRef };
+    return { isTouch, cursorRef, loaderRef, pointRef };
 };

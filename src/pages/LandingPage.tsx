@@ -36,11 +36,7 @@ function LandingPage() {
 
     enqueueLine("");
     enqueueLine(loadText, "landing");
-    enqueueLine("");
-    enqueueLine(greetingText, "creative developer");
-
     startHintInterval();
-
 
     return () => {
       clearQueue();
@@ -54,11 +50,9 @@ function LandingPage() {
   const startHintInterval = () => {
     if (hintIntervalRef.current !== null) return; // prevent stacking
 
-    print();
-
     hintIntervalRef.current = window.setInterval(() => {
       print();
-    }, 10000);
+    }, 5000);
 
     function print() {
       clearTerminalActives();

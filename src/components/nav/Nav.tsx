@@ -1,5 +1,5 @@
-import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import gsap from "gsap";
 
 import { usePageTransition } from "../../stores/usePageTransition";
@@ -55,7 +55,7 @@ function Nav() {
     return (
         <nav
             ref={navRef}
-            className="lg:pt-6 pt-4 [grid-area:main] self-start z-50 flex flex-row flex-wrap items-center opacity-0"
+            className="lg:pt-6 pt-4 [grid-area:main] self-start z-50 flex flex-row flex-wrap items-center opacity-0 no-select"
         >
             <div className=" hoverEl flex flex-row px-2 py-2 bg-grayish gap-2 w-fit rounded-4xl">
 

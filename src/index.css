@@ -142,6 +142,13 @@
     /* IE/Edge */
   }
 
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
     /* Chrome, Safari */

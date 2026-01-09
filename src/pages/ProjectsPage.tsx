@@ -4,6 +4,7 @@ import { useNavigate, useMatch } from "react-router-dom";
 import { useTerminalStore } from "../stores/useTerminal";
 import { usePageTransition } from "../stores/usePageTransition";
 import { useFilterStore } from "../stores/useFilter";
+import { useCursorStore } from "../stores/useCursorStore";
 
 import textData from "../texts.json";
 import ProjectInfoPanel from "../components/ProjectInfoPanel";
@@ -24,7 +25,7 @@ function ProjectPage() {
   const clearTerminalActives = useTerminalStore((s) => s.clearActives);
   const clearQueue = useTerminalStore((s) => s.clearQueue);
   const clearAllFilters = useFilterStore((s) => s.clearAllFilters);
-
+  const setDisplayText = useCursorStore((s) => s.setDisplayText);
 
   const loadText: string = textData.loaded[0];
   const exitText: string = textData.exit[0];
@@ -36,6 +37,8 @@ function ProjectPage() {
   useEffect(() => {
     enqueueLine("");
     enqueueLine(loadText, "projects");
+
+    setDisplayText("more");
 
     return () => {
       const tr = targetRouteRef.current;

@@ -57,12 +57,12 @@ function NavSide({ parentRef }: NavSideProps) {
 
   return (
     <>
-      <span className="topicEl mx-3">&gt;&gt;</span>
-      <span className="topicEl mx-2">&#123;</span>
+      <span className="topicEl px-3">&gt;&gt;</span>
+      <span className="topicEl pl-4 pr-3 bg-grayish rounded-l-full">&#123;</span>
 
       <TopicTags />
 
-      <span className="topicEl mx-3">&#125;</span>
+      <span className="topicEl pl-3 pr-4 bg-grayish rounded-r-full">&#125;</span>
       <span className="mx-3">&gt;&gt;</span>
 
       <FilterTags />

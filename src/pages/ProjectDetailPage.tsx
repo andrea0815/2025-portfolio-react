@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTerminalStore } from "../stores/useTerminal";
 import { usePageTransition } from "../stores/usePageTransition";
 import { useFilterStore } from "../stores/useFilter";
+import { useCursorStore } from "../stores/useCursorStore";
 
 import textData from "../texts.json";
 import ProjectInfoPanel from "../components/ProjectInfoPanel";
@@ -24,6 +25,8 @@ function ProjectDetailPage() {
   const clearQueue = useTerminalStore((s) => s.clearQueue);
   const clearAllFilters = useFilterStore((s) => s.clearAllFilters);
   const currentProject = useFilterStore((s) => s.currentProject);
+  const setDisplayText = useCursorStore((s) => s.setDisplayText);
+
 
   const loadText: string = textData.loaded[0];
   const exitText: string = textData.exit[0];
@@ -49,6 +52,8 @@ function ProjectDetailPage() {
     enqueueMultiple(tools ?? []);
     enqueueLine("");
     enqueueLine(`${currentProject?.description}`);
+
+    setDisplayText("back")
 
     return () => {
       clearQueue();

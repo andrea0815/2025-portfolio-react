@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useScramble } from "use-scramble";
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { useScramble } from "use-scramble";
 
 import { useTerminalStore } from "../stores/useTerminal";
 import { useFilterStore } from "../stores/useFilter";
@@ -11,44 +11,71 @@ import { useContentful } from "../stores/useContentful";
 import textData from "../texts.json";
 
 
+type HeadingMode = "landing" | "about" | "projects" | "other";
+
 function Heading() {
   // stores
   const enqueueLine = useTerminalStore((s) => s.enqueueLine);
   const clearActives = useTerminalStore((s) => s.clearActives);
   const setCurrentTopic = useFilterStore((s) => s.setCurrentTopic);
-
-  // navigation logic
-  const location = useLocation();
-  const isLanding = location.pathname === "/";
-  const isProjects = location.pathname.startsWith("/projects");
-  const isAbout = location.pathname === "/about";
-
   const currentTopic = useFilterStore((s) => s.currentTopic);
 
-  // Array Lists
-  const topics = useContentful((s) => s.topics);
-  const landingTexts = topics?.map((t) => t.jobDescription) || [];
+  // routing
+  const location = useLocation();
+
+  const mode: HeadingMode = useMemo(() => {
+    const path = location.pathname;
+    if (path === "/") return "landing";
+    if (path.startsWith("/projects")) return "projects";
+    if (path === "/about") return "about";
+    return "other";
+  }, [location.pathname]);
+
+  const isProjects = mode === "projects";
+  const isLanding = mode === "landing";
+  const isAbout = mode === "about";
+
+  // content
+  const topics = useContentful((s) => s.topics) ?? [];
   const aboutHeading = textData.aboutHeading;
 
-  // states
-  const [hasMounted, setHasMounted] = useState(false);
-  const [currentTextList, setCurrentTextList] = useState<string[]>(isLanding ? landingTexts : aboutHeading.map(t => t.heading));
+  /**
+   * This list is what you cycle through when clicking the heading.
+   * Important: it's derived from mode + data, so useMemo (not useState).
+   */
+  const textList: string[] = useMemo(() => {
+    if (isLanding) return topics.map((t) => t.jobDescription);
+    if (isAbout) return aboutHeading.map((t) => t.heading);
+    return [];
+  }, [isLanding, isAbout, topics, aboutHeading]);
+
+  // index state
   const [textIndex, setTextIndex] = useState<number>(0);
 
-  // naviagtion logic
+  // when section changes, reset index
   useEffect(() => {
-    if (isLanding) {
-      setCurrentTextList(landingTexts)
-    } else if (isAbout) {
-      setCurrentTextList(aboutHeading.map(t => t.heading))
-    }
     setTextIndex(0);
-  }, [isLanding, isProjects]);
+  }, [mode]);
 
-  // animation and scramble logic
+  /**
+   * Display text inside the scramble span.
+   * - landing: show currentTopic.jobDescription
+   * - about: show the current heading
+   */
+  const displayText: string = useMemo(() => {
+    if (isLanding) return currentTopic?.jobDescription ?? "";
+    // fallback to "" if list is empty or index out of bounds
+    return textList[textIndex] ?? "";
+  }, [isLanding, currentTopic, textList, textIndex]);
+
+  // refs
   const containerRef = useRef<HTMLHeadingElement | null>(null);
+  const didIntroRef = useRef(false);
+
+
+  // scramble
   const { ref: scrambleRef, replay } = useScramble({
-    text: currentTextList[textIndex],
+    text: displayText,
     scramble: 4,
     speed: 0.5,
     ignore: [" "],
@@ -56,105 +83,133 @@ function Heading() {
     overflow: true,
   });
 
-
-  useGSAP(() => {
+  /**
+   * Route-driven visibility:
+   * projects => fade out + disable
+   * otherwise => fade in + enable
+   */
+  useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    if (!isProjects) {
+    gsap.killTweensOf(el);
 
-      const tl = gsap.timeline();
-
-      tl.from(el, {
-        ease: "power1.inOut",
-        delay: 0.5,
-        duration: 1,
-        opacity: 0,
-      })
-      tl.add(() => {
-        replay();
-      }, "+=0.2");
-
-    } else {
-      el.style.opacity = "0";
-      el.style.pointerEvents = "none";
+    // always ensure we have a known base state
+    // (only do the hard reset once, on the very first run)
+    if (!didIntroRef.current) {
+      gsap.set(el, { opacity: 0, pointerEvents: "none" });
     }
-  }, []);
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    if (!hasMounted) return;
 
     if (isProjects) {
-      // fade out
+      // fade out immediately on route changes
       gsap.to(el, {
         opacity: 0,
         duration: 1,
         ease: "power2.out",
-        pointerEvents: "none"
+        overwrite: "auto",
+        onComplete: () => {
+          el.style.pointerEvents = "none";
+        },
       });
-    } else {
-      // fade in
-      gsap.to(el, {
-        opacity: 1,
-        duration: 1,
-        ease: "power2.out",
-        pointerEvents: "auto"
-      });
+      return;
     }
+
+    // fade in
+    gsap.to(el, {
+      opacity: 1,
+      delay: 1,          // ✅ 2s only on very first intro
+      duration: 1,
+      ease: "power1.out",
+      overwrite: "auto",
+      onStart: () => {
+        el.style.pointerEvents = "auto";
+      },
+      onComplete: () => {
+        if (didIntroRef.current) {
+          handleClick();
+        }
+        didIntroRef.current = true; // ✅ intro completed once
+      },
+    });
   }, [isProjects]);
 
+  /**
+   * About page: enqueue the current about text when entering about
+   * and when the index changes.
+   */
   useEffect(() => {
     if (!isAbout) return;
-    enqueueLine(aboutHeading[textIndex].text, currentTextList[0]);
-  }, [isAbout])
 
-  const handleClick = useCallback(() => {
-    if (!isProjects) {
+    const item = aboutHeading[textIndex];
+    if (!item) return;
 
-      clearActives();
+    enqueueLine(item.text, item.heading);
+  }, [isAbout, textIndex, aboutHeading, enqueueLine]);
 
-      const newIndex = (textIndex + 1) % currentTextList.length;
-      setTextIndex(newIndex);
-
-      // if current section is landing, update the new topic
-      if (isLanding) {
-        setCurrentTopic(topics[newIndex]);
-      }
-
-      replay();
-      isAbout ?
-        enqueueLine(aboutHeading[newIndex].text, currentTextList[newIndex]) :
-        enqueueLine(textData.greeting[0], currentTextList[newIndex]);
-    }
-  }, [textIndex, currentTextList]);
-
+  /**
+   * Landing: keep index in sync with currentTopic.
+   * (Fixes your jobDescription vs name mismatch.)
+   */
   useEffect(() => {
     if (!isLanding || !currentTopic) return;
 
-    const newIndex = landingTexts.findIndex(t => t === currentTopic.name);
-    if (newIndex !== -1) setTextIndex(newIndex);
-  }, [currentTopic, isLanding, landingTexts]);
+    const idx = topics.findIndex((t) => t.jobDescription === currentTopic.jobDescription);
+    if (idx >= 0) setTextIndex(idx);
+  }, [isLanding, currentTopic, topics]);
 
+  const handleClick = useCallback(() => {
+    if (isProjects) return;
+    if (textList.length === 0) return;
+
+    clearActives();
+
+    const nextIndex = (textIndex + 1) % textList.length;
+    setTextIndex(nextIndex);
+
+    if (isLanding) {
+      const nextTopic = topics[nextIndex];
+      if (nextTopic) setCurrentTopic(nextTopic);
+
+      // terminal
+      enqueueLine(textData.greeting[0], nextTopic?.jobDescription ?? "");
+    } else if (isAbout) {
+      const next = aboutHeading[nextIndex];
+      if (next) enqueueLine(next.text, next.heading);
+    } else {
+      // optional: any default behavior for other pages
+      enqueueLine(textData.greeting[0], textList[nextIndex] ?? "");
+    }
+
+    replay();
+  }, [
+    isProjects,
+    textList,
+    textIndex,
+    isLanding,
+    isAbout,
+    topics,
+    aboutHeading,
+    clearActives,
+    setCurrentTopic,
+    enqueueLine,
+    replay,
+  ]);
 
   return (
-    <div className='[grid-area:main] flex justify-center items-center z-10 pointer-events-none mix-blend-difference'>
+    <div className="[grid-area:main] flex justify-center items-center z-10 pointer-events-none mix-blend-difference">
       <h1
         ref={containerRef}
         onClick={handleClick}
-        className='heading hoverEl text-heading font-serif text-[7vw] text-center pointer-events-auto'
-      >&#123; <span
-        ref={scrambleRef}
-        className="heading__text text-inherit font-[inherit] [font-size:inherit]">
-          {isLanding
-            ? currentTopic?.name || ""
-            : currentTextList[textIndex]}
-        </span> &#125;
+        className="heading hoverEl text-heading font-serif text-[7vw] text-center pointer-events-auto"
+      >
+        &#123;{" "}
+        <span
+          ref={scrambleRef}
+          className="heading__text text-inherit font-[inherit] [font-size:inherit]"
+        >
+          {displayText}
+        </span>{" "}
+        &#125;
       </h1>
     </div>
   );

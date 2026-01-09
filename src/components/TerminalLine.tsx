@@ -66,7 +66,7 @@ function TerminalLine({
     }, []);
 
     return (
-        <span className="line grid grid-cols-[auto_1fr] gap-2">
+        <span className="line grid grid-cols-[auto_1fr] gap-2 no-select">
             <span className="static flex-shrink-0">{staticText}</span>
             <span
                 ref={outputRef}

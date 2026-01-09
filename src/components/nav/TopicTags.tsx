@@ -21,6 +21,7 @@ function TopicTags() {
 
 
     const [showAll, setShowAll] = useState(false);
+    const [isShowCooldown, setIsShowCooldown] = useState(false);
 
     function reorderArray(tagArray: Topic[], currentTag: string) {
         const index = tagArray.findIndex((t) => t.name === currentTag);
@@ -53,8 +54,22 @@ function TopicTags() {
             enqueueLine(">> changed to " + topic.name);
 
             clearAllFilters();
+            
             setShowAll(false);
+            setIsShowCooldown(true);
+            setTimeout(() => {
+                setIsShowCooldown(false);
+            }, 1000)
         }
+    }
+
+    const handleHoverEnter = () => {
+        if (isShowCooldown) return;
+        setShowAll(true);
+    }
+    const handleHoverLeave = () => {
+        if (isShowCooldown) return;
+        setShowAll(false);
     }
 
     const visibleTopics = showAll
@@ -68,9 +83,17 @@ function TopicTags() {
                     <TopicTag
                         text={topic.name}
                         isCurrent={topic.name === currentTopic?.name}
+                        showAll={showAll}
                         onSelect={() => handleClick(topic)}
+                        onHoverEnter={handleHoverEnter}
+                        onHoverLeave={handleHoverLeave}
                     />
-                    {i !== visibleTopics.length - 1 && <span className="topicEl">,</span>}
+                    {i !== visibleTopics.length - 1 &&
+                        <span
+                            className="topicEl bg-grayish"
+                            onMouseEnter={handleHoverEnter}
+                            onMouseLeave={handleHoverLeave}
+                        >,</span>}
                 </Fragment>
             ))}
         </>
