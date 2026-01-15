@@ -72,7 +72,7 @@ export const useCursorUpdates = ({
             gsap.to(point, { scale: 1, duration: 0.25, ease: "power3.out" });
             setIsDisplayingText(false);
         };
-        
+
         const shrink = () => {
             gsap.to(point, { scale: 0.25, duration: 0.25, ease: "power3.out" });
             setIsDisplayingText(true);
@@ -81,6 +81,9 @@ export const useCursorUpdates = ({
         // Define handleUp first, so press tween can call it.
         const handleUp = () => {
             releasedRef.current = true;
+
+            setIsDisplayingText(true);
+
             //   gsap.to(ring, { opacity: 0, duration: 0.5, ease: "power2.out" });
             loadingBarTween.timeScale(3).reverse();
             cursorGrowTween.timeScale(3).reverse();
@@ -89,6 +92,8 @@ export const useCursorUpdates = ({
         const handleDown = () => {
             if (!isLandingRef.current) return;
             releasedRef.current = false;
+
+            setIsDisplayingText(false);
 
             loadingBarTween.timeScale(1).restart(true);
             cursorGrowTween.timeScale(1).restart(true);

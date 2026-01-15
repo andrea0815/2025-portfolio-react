@@ -38,7 +38,7 @@ function ProjectPage() {
     enqueueLine("");
     enqueueLine(loadText, "projects");
 
-    setDisplayText("more");
+    setDisplayText("");
 
     return () => {
       const tr = targetRouteRef.current;

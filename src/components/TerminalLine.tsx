@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { memo } from "react";
+import gsap from "gsap";
+import SplitText from "gsap/SplitText";
 import { useScramble } from "use-scramble";
+
 import { useTerminalStore } from "../stores/useTerminal";
 import textData from "../texts.json";
 
@@ -20,17 +23,52 @@ function TerminalLine({
     const [staticText, setStaticText] = useState<string>(textData.static[0]);
     const [isActive, setIsActive] = useState(true);
 
-    const { ref: outputRef, replay } = useScramble({
-        text,
-        scramble: 3,
-        speed: 1,
-        overdrive: false,
+    const outputRef = useRef<HTMLSpanElement | null>(null);
+    const splitRef = useRef<SplitText | null>(null);
+    const tweenRef = useRef<gsap.core.Tween | gsap.core.Timeline | null>(null);
 
-        onAnimationEnd() {
-            setHasAnimated(true);
-            onDone();
-        }
-    });
+    const replay = () => {
+        if (!outputRef.current) return;
+
+        const isLongText = outputRef.current.textContent.length > 60 ? true : false;
+        const STAGGER = isLongText ? 0.05 : 0.09;
+        const DURATION = isLongText ? 0.05 : 0.15;
+
+        // cleanup any previous run
+        tweenRef.current?.kill();
+        splitRef.current?.revert();
+
+        gsap.set(outputRef.current, { opacity: 1 });
+
+        splitRef.current = new SplitText(outputRef.current, { type: "words" });
+
+        gsap.set(splitRef.current.words, { opacity: 0.3, y: 0 });
+
+        tweenRef.current = gsap.to(splitRef.current.words, {
+            opacity: 1,
+            y: 0,
+            duration: DURATION,
+            ease: "power2.inOut",
+            stagger: STAGGER,
+            onComplete: () => {
+                splitRef.current?.revert();
+                splitRef.current = null;
+                tweenRef.current = null;
+
+                setHasAnimated(true);
+                onDone();
+            },
+        });
+    };
+
+    useEffect(() => {
+        return () => {
+            tweenRef.current?.kill();
+            splitRef.current?.revert();
+        };
+    }, []);
+
+
 
     useEffect(() => {
         if (!animateNow) return;
@@ -70,8 +108,8 @@ function TerminalLine({
             <span className="static flex-shrink-0">{staticText}</span>
             <span
                 ref={outputRef}
-                className={`output opacity-100 ${isActive ? "active" : ""}`}
-            ></span>
+                className={`output ${isActive ? "active" : ""}`}
+            >{text}</span>
         </span>
     );
 }

@@ -53,7 +53,7 @@ function ProjectDetailPage() {
     enqueueLine("");
     enqueueLine(`${currentProject?.description}`);
 
-    setDisplayText("back")
+    setDisplayText("")
 
     return () => {
       clearQueue();

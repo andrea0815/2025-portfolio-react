@@ -5,6 +5,7 @@ import { useFilterStore } from "../stores/useFilter";
 
 import type { ProjectLink } from "../stores/useContentful";
 import GalleryLinkButton from './gallery/GalleryLinkButton';
+import ProjectDetailBtn from './ProjectDetailBtn';
 
 function ProjectInfoPanel() {
     const currentProject = useFilterStore((s) => s.currentProject);
@@ -25,6 +26,8 @@ function ProjectInfoPanel() {
                     url={link.url}
                 />
             ))}
+
+            <ProjectDetailBtn />
         </div>
     );
 }

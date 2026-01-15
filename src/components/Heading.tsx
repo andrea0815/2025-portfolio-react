@@ -133,18 +133,6 @@ function Heading() {
     });
   }, [isProjects]);
 
-  /**
-   * About page: enqueue the current about text when entering about
-   * and when the index changes.
-   */
-  useEffect(() => {
-    if (!isAbout) return;
-
-    const item = aboutHeading[textIndex];
-    if (!item) return;
-
-    enqueueLine(item.text, item.heading);
-  }, [isAbout, textIndex, aboutHeading, enqueueLine]);
 
   /**
    * Landing: keep index in sync with currentTopic.
@@ -169,14 +157,17 @@ function Heading() {
     if (isLanding) {
       const nextTopic = topics[nextIndex];
       if (nextTopic) setCurrentTopic(nextTopic);
-
+      console.log("one");
+      
       // terminal
       enqueueLine(textData.greeting[0], nextTopic?.jobDescription ?? "");
     } else if (isAbout) {
+      console.log("two");
       const next = aboutHeading[nextIndex];
       if (next) enqueueLine(next.text, next.heading);
     } else {
       // optional: any default behavior for other pages
+      console.log("three");
       enqueueLine(textData.greeting[0], textList[nextIndex] ?? "");
     }
 
@@ -200,7 +191,7 @@ function Heading() {
       <h1
         ref={containerRef}
         onClick={handleClick}
-        className="heading hoverEl text-heading font-serif text-[7vw] text-center pointer-events-auto"
+        className="heading text-heading font-serif text-[7vw] text-center pointer-events-auto"
       >
         &#123;{" "}
         <span

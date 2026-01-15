@@ -15,7 +15,15 @@
         "",
         "",
         "",
+        "",
+        "",
+        "",
+        "",
         ""
+    ],
+    "welcomeOnLoad": [
+        "hey, my name is Andrea Windisch",
+        "and i'm a creative who loves to code and design"
     ],
     "exit": [
         ">> exit BLANK"

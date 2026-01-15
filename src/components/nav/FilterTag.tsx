@@ -44,10 +44,11 @@ function FilterTag({ tag, isProjectTag, isFilterButton, onSelect }: FilterTagPro
 
   const handleClick = () => {
     onSelect();
-    clearQueue();
-    clearTerminalActives();
 
     if (isFilterButton) return;
+
+    clearQueue();
+    clearTerminalActives();
 
     if (isProjectTag) {
       handleProjectsClick();
@@ -59,10 +60,10 @@ function FilterTag({ tag, isProjectTag, isFilterButton, onSelect }: FilterTagPro
   const handleProjectsClick = () => {
     if (!isActive) {
       addFilter(tag);
-      enqueueLine(`>> applied filter: &lt;${tag.name}&gt;`);
+      enqueueLine(`>> applied filter: <${tag.name}>`);
     } else {
       removeFilter(tag);
-      enqueueLine(`>> removed filter: &lt;${tag.name}&gt;`);
+      enqueueLine(`>> removed filter: <${tag.name}>`);
     }
   }
 

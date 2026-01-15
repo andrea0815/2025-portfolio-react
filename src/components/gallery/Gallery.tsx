@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { useMatch } from "react-router-dom";
 
 import { useContentful } from "../../stores/useContentful";
@@ -23,7 +23,7 @@ function Gallery() {
   const clearQueue = useTerminalStore((s) => s.clearQueue);
   const setCurrentProject = useFilterStore((s) => s.setCurrentProject);
   const currentProject = useFilterStore((s) => s.currentProject);
-  const requestTransition = usePageTransition((s) => s.requestTransition);
+  const isTransitioning = usePageTransition((s) => s.isTransitioning);
 
   const isProjects = !!useMatch("/projects/*");
   const isDetailPage = !!useMatch("/projects/:slug");
@@ -52,11 +52,24 @@ function Gallery() {
         top: lastScrollPosition.current,
         behavior: "smooth",
       });
+      checkIfTopScrollPosition(lastScrollPosition.current);
     } else {
       // on detail page, go to top
       scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+
+
+      checkIfTopScrollPosition(lastScrollPosition.current === 0 ? 0 : 1);
     }
   }, [isDetailPage, isProjects]);
+
+  useLayoutEffect(() => {
+    if (!isProjects) return;
+    if (!isTransitioning) return;
+
+    if (!isDetailPage) {
+      lastScrollPosition.current = scrollRef.current?.scrollTop ?? 0;
+    }
+  }, [isTransitioning])
 
   const { items: sliderItems, activeProject } = useGalleryDisplayItems(
     filteredProjects,
@@ -98,7 +111,7 @@ function Gallery() {
       project.tags
         ?.map((t: any) => ({ name: t.fields?.name }))
         .filter((t: Tag) => Boolean(t.name)) ?? [];
-    const tags = derivedTags.map((t) => `&lt;${t.name}&gt;`).join(" ") || "no tags";
+    const tags = derivedTags.map((t) => `<${t.name}>`).join(" ") || "no tags";
 
     clearQueue();
     clearTerminalActives();
@@ -109,22 +122,21 @@ function Gallery() {
     enqueueLine(tags);
   };
 
-  const handleClick = () => {
-    // leaving LIST -> going DETAIL: save current scrollTop
-    if (!isDetailPage) {
-      lastScrollPosition.current = scrollRef.current?.scrollTop ?? 0;
-      requestTransition(`/projects/${currentProject?.slug ?? ""}`);
-      return;
+  const checkIfTopScrollPosition = (scrollPosition: number) => {
+    if (scrollPosition === 0) {
+      setTimeout(() => {
+        const vh = window.visualViewport?.height ?? window.innerHeight; // ≈ 100dvh
+        scrollRef.current?.scrollTo({
+          top: vh,
+          behavior: "smooth",
+        });
+      }, 1000)
     }
-
-    // leaving DETAIL -> going back LIST:
-    requestTransition("/projects");
-  };
+  }
 
   return (
     <section
       ref={scrollRef}
-      onClick={handleClick}
       className={`fixed h-screen w-screen select-none snap-y snap-mandatory no-scrollbar mix-blend-difference
         ${scrollEnabled ? "overflow-y-scroll" : "overflow-y-hidden"}
         ${isProjects ? "pointer-events-auto" : "pointer-events-none"} `}

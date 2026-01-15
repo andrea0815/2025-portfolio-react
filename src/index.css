@@ -38,6 +38,7 @@
   --spacing-4: 15px;
   --spacing-5: 20px;
   --spacing-6: 30px;
+  --spacing-6-7: 45px;
   --spacing-7: 60px;
   --spacing-8: 100px;
 
@@ -227,7 +228,9 @@
     @apply text-secondary;
   }
 
-  .terminal .output.active {
+  .terminal .output.active,
+  .terminal .output.active *
+   {
     @apply text-primary;
   }
 
