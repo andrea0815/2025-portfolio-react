@@ -9,6 +9,7 @@ import { usePageTransition } from "../../stores/usePageTransition";
 import { useGsapScrollGallery } from "./useGsapScrollGallery";
 import { useIdleCurrentProject } from "./UseIdleCurrentProject";
 import { useGalleryDisplayItems } from "./useGalleryDisplayItems";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 import type { Tag, Project } from "../../stores/useContentful";
 
@@ -37,11 +38,11 @@ function Gallery() {
   const lastScrollPosition = useRef<number>(0);
 
   const IDLE_SELECT_MS = 800;
-  const FOKUS_OFFSET_RIGHT = true ? 100 : 60; // padding in px 
   const SCALE_MIN = 0.75;
   const SCALE_RANGE = 0.25;
-  const OPACITY_MIN = 0.15;
-  const OPACITY_RANGE = 0.85;
+  const OPACITY_MIN = 0.35;
+  const OPACITY_RANGE = 0.65;
+  const FOKUS_OFFSET_RIGHT = useMediaQuery("(min-width: 768px)") ? 100 : 15; // padding in px 
 
   useEffect(() => {
     if (!isProjects) return;
@@ -56,8 +57,6 @@ function Gallery() {
     } else {
       // on detail page, go to top
       scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-
-
       checkIfTopScrollPosition(lastScrollPosition.current === 0 ? 0 : 1);
     }
   }, [isDetailPage, isProjects]);
@@ -116,7 +115,7 @@ function Gallery() {
     clearQueue();
     clearTerminalActives();
     enqueueLine("");
-    enqueueLine(`title: ${title}`);
+    enqueueLine(`title: "${title}"`);
     enqueueLine(`type: ${subtitle.toLowerCase()}`);
     enqueueLine("");
     enqueueLine(tags);
@@ -130,7 +129,7 @@ function Gallery() {
           top: vh,
           behavior: "smooth",
         });
-      }, 1000)
+      }, 1500)
     }
   }
 

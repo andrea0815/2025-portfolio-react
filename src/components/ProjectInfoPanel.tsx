@@ -19,6 +19,9 @@ function ProjectInfoPanel() {
 
     return (
         <div className='flex flex-row flex-wrap-reverse gap-3 text-right align-right justify-end '>
+
+            <ProjectDetailBtn />
+
             {links.map((link: ProjectLink, index: number) => (
                 <GalleryLinkButton
                     key={index}
@@ -27,7 +30,6 @@ function ProjectInfoPanel() {
                 />
             ))}
 
-            <ProjectDetailBtn />
         </div>
     );
 }

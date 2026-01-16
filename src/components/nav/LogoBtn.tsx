@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { usePageTransition } from "../../stores/usePageTransition";
 import LogoIcon from '../icons/LogoIcon';
 
-function ThemeBtn() {
+function LogoBtn() {
 
     const {
         isTransitioning,
@@ -26,10 +26,10 @@ function ThemeBtn() {
         <Link
             to="/"
             onClick={(e) => handleClick(e, "/")}
-            className="translate-y-1/4 z-50">
+            className="md:translate-y-1/4 z-50">
             <LogoIcon />
         </Link>
     );
 }
 
-export default ThemeBtn;
+export default LogoBtn;

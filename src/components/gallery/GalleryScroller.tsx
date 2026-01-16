@@ -15,7 +15,7 @@ function GalleryScroller({ scrollRef, displayProjectsCount }: GalleryScrollerPro
             style={{ height: `${SCROLL_HEIGHT}dvh` }}
         >
             {Array.from({ length: displayProjectsCount }, (_, index) => (
-                <div key={index} className="h-dvh snap-start" />
+                <div key={index} className="h-svh snap-start" />
             ))}
         </div>
     );

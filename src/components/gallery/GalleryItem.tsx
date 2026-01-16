@@ -55,7 +55,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
   if (!url) return null;
 
   return (
-    <div className="hoverEl gallery-item w-[80dvw] lg:w-[clamp(0px,50dvw,70dvh)] aspect-square flex items-center justify-center snap-end select-none origin-bottom overflow-hidden">
+    <div className="hoverEl gallery-item w-[calc(100dvw-30px)] md:w-[clamp(0px,50dvw,70dvh)] aspect-square flex items-center justify-center snap-end select-none origin-bottom overflow-hidden">
       {isVideo ? (
         <video
           ref={videoRef}

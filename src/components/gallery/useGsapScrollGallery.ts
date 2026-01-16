@@ -39,6 +39,9 @@ export function useGsapScrollGallery({
     })
     const didInitRef = useRef(false);
 
+    console.log(fokusOffsetRight);
+
+
     useLayoutEffect(() => {
         didInitRef.current = false;
 
@@ -59,8 +62,13 @@ export function useGsapScrollGallery({
         const xTo = gsap.quickTo(track, "x", { duration: 0.25, ease: "power2.out" });
 
         const apply = () => {
-            const vh = scrollEl.clientHeight; // viewport height
-            const raw = scrollEl.scrollTop / vh; // raw scroll position in "dvh" units
+            // const vh = scrollEl.clientHeight; // viewport height
+            // const raw = scrollEl.scrollTop / vh; // raw scroll position in "dvh" units
+
+            const pageEl = scrollEl.querySelector<HTMLElement>(".snap-start");
+            const pageH = pageEl?.offsetHeight ?? scrollEl.clientHeight;
+
+            const raw = scrollEl.scrollTop / pageH;
 
             const activeIndex = Math.floor(raw + 0.4);
             onActiveIndex(activeIndex);
@@ -75,6 +83,8 @@ export function useGsapScrollGallery({
             const c0 = centers[safeI0] ?? 0; // center of current item
             const c1 = centers[i1] ?? c0;
             const activeCenter = c0 + (c1 - c0) * t; // interpolated center
+
+
 
             const firstWidth = widths[0] ?? items[0].offsetWidth;
             const heroX = window.innerWidth - fokusOffsetRight - firstWidth / 2;

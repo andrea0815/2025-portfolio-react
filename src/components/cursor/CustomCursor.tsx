@@ -39,8 +39,12 @@ function CustomCursor() {
 
             <div
               ref={pointRef}
-              className="w-7 h-7 bg-cursor rounded-full  scale-25"
+              className="w-7 h-7 bg-cursor rounded-full  scale-25 relative"
             >
+              {/* <div className="absolute top-1/2 left-1/2 -translate-1/2 flex flex-col justify-center items-center gap-5">
+                <p className=" text-9xl rotate-90"> &lt;</p>
+                <p className="text-9xl rotate-90"> &gt;</p>
+              </div> */}
             </div>
 
             <CursorText

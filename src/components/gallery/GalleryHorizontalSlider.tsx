@@ -18,6 +18,8 @@ function GalleryHorizontalSlider({ galleryRef, items }: GalleryHorizontalSliderP
         const el = galleryRef.current;
         if (!el) return;
 
+        gsap.set(el, {opacity: 0});
+
         gsap.to(el, {
             opacity: isProjects ? 1 : 0,
             duration: 0.6,
@@ -30,7 +32,7 @@ function GalleryHorizontalSlider({ galleryRef, items }: GalleryHorizontalSliderP
     return (
         <div
             ref={galleryRef}
-            className="w-full fixed -z-20 flex top-1/2 -translate-y-1/2 overflow-x-auto items-center no-scrollbar"
+            className="horizontal w-full fixed -z-20 flex top-1/3 md:top-1/2 -translate-y-1/2 overflow-x-auto items-center no-scrollbar"
         >
             <div className="flex flex-row items-end lg:gap-5 flex-nowrap pl-[80vw] pr-8">
                 {items.map((item) => (

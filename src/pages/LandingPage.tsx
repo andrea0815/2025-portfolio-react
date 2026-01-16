@@ -27,6 +27,7 @@ function LandingPage() {
   const clearQueue = useTerminalStore((s) => s.clearQueue);
   const setDisplayText = useCursorStore((s) => s.setDisplayText);
   const onPageLoadText: string[] = textData.onPageLoad;
+  const welcomeOnLoad: string[] = textData.welcomeOnLoad;
   const loadText: string = textData.loaded[0];
   const exitText: string = textData.exit[0]
   const greetingText: string = textData.greeting[0]
@@ -47,13 +48,11 @@ function LandingPage() {
 
     enqueueLine("");
     enqueueLine(loadText, "welcome page");
-    
+
     if (checkIfPageReload()) {
       window.__LANDING_BOOT_PRINTED__ = true;
-
-      enqueueLine("");
-      enqueueLine("hey, my name is Andrea Windisch");
-      enqueueLine("welcome on my portfolio website, i hope you have fun!");
+      clearTerminalActives();
+      enqueueMultiple(welcomeOnLoad);
     }
 
     // // Keep your "once per session" stuff separate if you still want it:

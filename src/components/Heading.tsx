@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { useScramble } from "use-scramble";
+import gsap from "gsap";
 
 import { useTerminalStore } from "../stores/useTerminal";
 import { useFilterStore } from "../stores/useFilter";
@@ -158,7 +157,7 @@ function Heading() {
       const nextTopic = topics[nextIndex];
       if (nextTopic) setCurrentTopic(nextTopic);
       console.log("one");
-      
+
       // terminal
       enqueueLine(textData.greeting[0], nextTopic?.jobDescription ?? "");
     } else if (isAbout) {
@@ -187,16 +186,18 @@ function Heading() {
   ]);
 
   return (
-    <div className="[grid-area:main] flex justify-center items-center z-10 pointer-events-none mix-blend-difference">
+    <div
+      onClick={handleClick}
+      ref={containerRef}
+      className="fixed h-screen w-screen top-0 left-0 flex justify-center items-center z-10 mix-blend-difference"
+    >
       <h1
-        ref={containerRef}
-        onClick={handleClick}
-        className="heading text-heading font-serif text-[7vw] text-center pointer-events-auto"
+        className="heading text-heading font-serif text-[10vw] text-center select-none"
       >
         &#123;{" "}
         <span
           ref={scrambleRef}
-          className="heading__text text-inherit font-[inherit] [font-size:inherit]"
+          className="heading__text text-inherit font-[inherit] [font-size:inherit] select-none"
         >
           {displayText}
         </span>{" "}

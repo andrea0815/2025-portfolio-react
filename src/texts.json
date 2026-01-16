@@ -22,8 +22,9 @@
         ""
     ],
     "welcomeOnLoad": [
-        "hey, my name is Andrea Windisch",
-        "and i'm a creative who loves to code and design"
+        "",
+        "welcome, this is my portfolio website.",
+        "my name is Andrea Windisch."
     ],
     "exit": [
         ">> exit BLANK"
@@ -35,50 +36,38 @@
         ">> external link BLANK has been opened"
     ],
     "workExperience": [
-        "01-2019",
-        "one-month internship at Vice Virtue",
-        "as graphic designer",
+        "01/2019\nVICE VIRTUE – advertising agency\ninternship | graphic design",
         "",
-        "11-2019 – 01-2022",
-        "Architekturbüro Abendroth Architekten",
-        "as graphic designer, social media manager",
+        "11/2019 – 01/2022\nABENDROTH ARCHITEKTEN – architectural company \npart-time | graphic design, social media management",
         "",
-        "02-2022 – 08-2024",
-        "R12 Spannbauer GmbH – media agency",
-        "as graphic designer",
+        "02/2022 – 08/2024\nR12 SPANNBAUER GMBH – media agency\npart-time | graphic design",
         "",
-        "09-2024 – 08-2024",
-        "Left Studio - digital ageny",
-        "as full-stack developer"
+        "09/2024 – now\nLEFT STUDIO - digital agency\npart-time | full-stack development, interaction design"
     ],
     "education": [
-        "2016-2021",
-        "Graphic and Communication Design",
-        "at the Higher Federal Institution for Graphic Education and Research",
+        "2016-2021\nGraphic and Communication Design\nat the Higher Federal Institution for Graphic Education and Research",
         "",
-        "2021-2025",
-        "Creative Computing (BSc)",
-        "at the University of Applied Sciences St. Pölten"
+        "2021–2025\nCreative Computing (BSc)\nat the University of Applied Sciences St. Pölten"
     ],
     "tools": [
-        "unity",
-        "blender",
-        "cinema4D",
+        "tech stack",
         "",
-        "craft-cms",
-        "tailwind.js",
-        "vue.js",
-        "three.js",
-        "node.js",
+        "\"craft-cms\"",
+        "\"tailwind.js\"",
+        "\"vue.js\"",
+        "\"three.js\"",
+        "\"node.js\"",
         "",
-        "photoshop",
-        "indesign",
-        "illustrator",
-        "after effects",
-        "figma",
-        "unity",
-        "blender",
-        "cinema4D"
+        "design stack",
+        "",
+        "\"photoshop\"",
+        "\"indesign\"",
+        "\"illustrator\"",
+        "\"after effects\"",
+        "\"figma\"",
+        "\"unity\"",
+        "\"blender\"",
+        "\"cinema4\"D"
     ],
     "projects": [
         {

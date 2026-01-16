@@ -4,8 +4,10 @@ import gsap from "gsap";
 
 import { usePageTransition } from "../../stores/usePageTransition";
 
-import NavSide from "./NavSide";
 import ScrambleText from "../base/ScrambleText";
+import NavSide from "./NavSide";
+import LogoBtn from './LogoBtn';
+
 
 function Nav() {
     const location = useLocation();
@@ -55,9 +57,14 @@ function Nav() {
     return (
         <nav
             ref={navRef}
-            className="lg:pt-6 pt-4 [grid-area:main] self-start z-50 flex flex-row flex-wrap items-center opacity-0 no-select"
+            className="md:pt-6 pt-4 [grid-area:main] self-start z-50 flex flex-row flex-wrap gap-y-2 md:gap-y-0 items-center opacity-0 no-select"
         >
+            <div className="p-3 md:p-0 md:hidden">
+                <LogoBtn />
+            </div>
+
             <div className=" hoverEl flex flex-row px-2 py-2 bg-grayish gap-2 w-fit rounded-4xl">
+
 
                 <NavLink
                     to="/projects"

@@ -52,7 +52,7 @@ export const useCursorUpdates = ({
     }, []);
 
     useEffect(() => {
-        if (isTouch) return;
+        // if (isTouch) return;
 
         const cursor = cursorRef.current;
         const point = pointRef.current;
@@ -171,3 +171,6 @@ export const useCursorUpdates = ({
 
     return { isTouch, cursorRef, loaderRef, pointRef };
 };
+
+
+
